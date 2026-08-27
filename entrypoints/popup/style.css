@@ -68,7 +68,8 @@ main { min-height: 380px; }
 .eyebrow { margin: 0 0 12px; color: var(--amber); font-size: 10px; letter-spacing: .08em; line-height: 1.4; }
 .eyebrow-danger { color: var(--coral); }
 h1, h2 { margin: 0; font-weight: 700; line-height: 1.05; letter-spacing: -.02em; }
-h1 { max-width: 10ch; font-size: 36px; }
+h1, .review-title { max-width: 10ch; font-size: 36px; }
+.brand { max-width: none; }
 h2 { font-size: 26px; }
 .lede, .view > p { color: var(--muted); line-height: 1.55; }
 .lede { max-width: 32ch; margin: 16px 0 24px; font-size: 17px; }
