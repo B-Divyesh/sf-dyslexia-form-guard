@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090c14" />
+    <meta name="description" content="Form Guard is a private browser extension that helps you review repeated words, adjacent letter swaps, and mismatched retyped values before submitting a form." />
+    <link rel="preload" href="/fonts/atkinson-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <title>Form Guard — a private final pass for important forms</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <a class="logo" href="/" aria-label="Form Guard home">
+        <span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>FORM GUARD</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#how">How it works</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+      <a class="header-download" href="/downloads/form-guard-chrome.zip" download>Get extension <span aria-hidden="true">↓</span></a>
+    </header>
+
+    <main id="main">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="console-label"><span class="status-dot"></span> LOCAL CHECKPOINT / READY</p>
+          <h1 id="hero-title">Catch the small slip <em>before</em> the big send.</h1>
+          <p class="hero-lede">Form Guard gives visible fields a calm, one-at-a-time final pass. It flags repeated words, likely adjacent letter swaps, and retyped values that do not match—without uploading what you typed.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/downloads/form-guard-chrome.zip" download><span aria-hidden="true">▶</span> Download for Chrome / Edge</a>
+            <a class="button button-secondary" href="#how">See the review flow <span aria-hidden="true">↓</span></a>
+          </div>
+          <ul class="proof-strip" aria-label="Product principles">
+            <li><b>LOCAL</b><span>Analysis stays in your tab</span></li>
+            <li><b>OPT-IN</b><span>You start every review</span></li>
+            <li><b>NO VALUES</b><span>Nothing typed is saved</span></li>
+          </ul>
+        </div>
+        <figure class="hero-visual">
+          <span class="scan-line" aria-hidden="true"></span>
+          <picture>
+            <source type="image/avif" srcset="/assets/hero-form-checkpoint-768.avif 768w, /assets/hero-form-checkpoint-1280.avif 1280w" sizes="(max-width: 760px) 100vw, 56vw" />
+            <img src="/assets/hero-form-checkpoint-1280.webp" srcset="/assets/hero-form-checkpoint-768.webp 768w, /assets/hero-form-checkpoint-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 56vw" width="1280" height="853" alt="Pixel-art form sheets passing through a local inspection console, with possible errors marked in amber and checked rows leaving in green" decoding="async" fetchpriority="high" />
+          </picture>
+          <figcaption><span>FIG 01</span> A final-pass checkpoint, entirely on your device.</figcaption>
+        </figure>
+      </section>
+
+      <section class="signal-band" aria-label="What Form Guard checks">
+        <div class="wrap signal-grid">
+          <span>REPEATED WORDS</span><i aria-hidden="true"></i>
+          <span>SWAPPED LETTERS</span><i aria-hidden="true"></i>
+          <span>RETYPED MISMATCHES</span><i aria-hidden="true"></i>
+          <span>ONE FIELD AT A TIME</span>
+        </div>
+      </section>
+
+      <section id="how" class="section wrap how-section" aria-labelledby="how-title">
+        <div class="section-heading">
+          <p class="console-label">REVIEW SEQUENCE / 03 STEPS</p>
+          <h2 id="how-title">A second look without a second pair of eyes.</h2>
+          <p>Use Form Guard when the stakes feel high or your working memory feels full. It does not rewrite, submit, or decide anything for you.</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-number">01</span>
+            <div><h3>Open the checkpoint</h3><p>On the form page, select the toolbar icon or press <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd>.</p></div>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <div><h3>Read one field</h3><p>See and optionally hear its label and value. Move with buttons or the left and right arrow keys.</p></div>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <div><h3>Choose what to change</h3><p>Possible slips get a clear reason. Form Guard never edits a field or presses Submit for you.</p></div>
+          </li>
+        </ol>
+        <a class="text-link" href="/lab/">Open the seeded practice form <span aria-hidden="true">→</span></a>
+      </section>
+
+      <section class="section sample-section" aria-labelledby="sample-title">
+        <div class="wrap sample-grid">
+          <div class="sample-copy">
+            <p class="console-label">FIELD 03 / 07</p>
+            <h2 id="sample-title">Useful alerts. Quiet when things look right.</h2>
+            <p>The checker uses a deliberately small local ruleset. It looks for strong signals rather than grading every sentence, so it can keep false alarms low.</p>
+          </div>
+          <div class="review-sample" aria-label="Example Form Guard review panel">
+            <div class="sample-top"><span>CURRENT FIELD</span><span>2 CHECKS</span></div>
+            <h3>Delivery notes</h3>
+            <p class="typed-value">Leave the the form at my emial address.</p>
+            <div class="finding"><span>CHECK / REPEATED WORD</span><p>“the” appears twice in a row.</p></div>
+            <div class="finding"><span>CHECK / SWAPPED LETTERS</span><p>Check “emial”. Did you mean “email”?</p></div>
+            <div class="sample-controls" aria-hidden="true"><b>← BACK</b><b>◖ READ</b><b>NEXT →</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="privacy" class="section wrap privacy-section" aria-labelledby="privacy-title">
+        <div class="privacy-graphic" aria-hidden="true">
+          <div class="private-page"><i></i><i></i><i></i><i></i></div>
+          <div class="local-boundary"><span>LOCAL</span></div>
+        </div>
+        <div>
+          <p class="console-label">DATA ROUTE / STAYS HERE</p>
+          <h2 id="privacy-title">Your form is not the price.</h2>
+          <p>Field values are read only after you start a review. They are held in memory for that popup session, never saved, and never sent to Form Guard or an AI service.</p>
+          <ul class="check-list">
+            <li>Password fields are always excluded.</li>
+            <li>Banking, health, government, and password pages pause by default.</li>
+            <li>Site permissions and your optional license are the only stored settings.</li>
+          </ul>
+          <a class="text-link" href="/privacy/">Read the plain-language privacy policy <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section id="pricing" class="section pricing-section" aria-labelledby="pricing-title">
+        <div class="wrap">
+          <div class="section-heading centered">
+            <p class="console-label">LICENSE / YOUR CHOICE</p>
+            <h2 id="pricing-title">The complete review is free.</h2>
+            <p>Guard+ is a one-time supporter unlock for a convenience feature. Core checking, read aloud, keyboard review, and safety controls are never paywalled.</p>
+          </div>
+          <div class="plans">
+            <article class="plan">
+              <p class="plan-code">CORE / ACTIVE</p>
+              <h3>Form Guard</h3>
+              <p class="price"><b>$0</b><span>forever</span></p>
+              <ul>
+                <li>Every local checker</li>
+                <li>One-field review and read aloud</li>
+                <li>Keyboard controls and domain pause</li>
+              </ul>
+              <a class="button button-secondary" href="/downloads/form-guard-chrome.zip" download>Download free</a>
+            </article>
+            <article class="plan plan-plus">
+              <p class="plan-code">GUARD+ / ONE TIME</p>
+              <h3>Supporter unlock</h3>
+              <p class="price"><b>$12</b><span>one-time purchase</span></p>
+              <ul>
+                <li>Everything in free</li>
+                <li>Review flagged fields first</li>
+                <li>Helps fund private, local updates</li>
+              </ul>
+              <a class="button button-primary" href="https://api.sociobot.in/api/v1/products/dyslexia-form-guard/checkout">Buy Guard+ — $12 once</a>
+              <p class="merchant-note">Secure hosted checkout. Sociobot / Dodo is the merchant of record.</p>
+            </article>
+          </div>
+
+          <div id="license-panel" class="license-panel">
+            <div>
+              <p class="console-label">RESTORE / THIS BROWSER</p>
+              <h3>Already bought Guard+?</h3>
+              <p id="license-message" aria-live="polite">Paste your license token. Only the token is sent for verification.</p>
+            </div>
+            <form id="license-form" class="license-form">
+              <label for="license-input">License token</label>
+              <div class="input-row"><input id="license-input" type="password" autocomplete="off" spellcheck="false" /><button type="submit">Verify license</button></div>
+            </form>
+            <div id="saved-license" class="saved-license" hidden>
+              <span>Saved license: <code id="license-preview"></code></span>
+              <button id="copy-license" type="button">Copy for extension</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section wrap faq-section" aria-labelledby="faq-title">
+        <div class="section-heading"><p class="console-label">READOUT / FAQ</p><h2 id="faq-title">Before you install</h2></div>
+        <div class="faq-list">
+          <details><summary>Is this a spelling or grammar checker?</summary><p>No. It is a conservative final-pass tool for a few common, detectable slips. It does not judge style or claim a sentence is correct.</p></details>
+          <details><summary>Does it diagnose or treat dyslexia?</summary><p>No. Form Guard is a general-purpose review aid informed by a specific workflow. It is not a medical device and makes no claim of medical benefit.</p></details>
+          <details><summary>Why does it request access to web pages?</summary><p>An extension needs page access to read visible form controls after you start a scan and to outline the current field. It excludes password values and does not retain what it reads.</p></details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div><a class="logo" href="/"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>FORM GUARD</span></a><p>A private checkpoint for important forms.</p></div>
+        <nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/lab/">Practice form</a><a href="https://github.com/B-Divyesh/sf-dyslexia-form-guard">Source</a></nav>
+        <p class="disclosure">Hero imagery was generated specifically for Form Guard with Azure AI Foundry and reviewed by the product team. No stock art or personal data was used.</p>
+      </div>
+    </footer>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

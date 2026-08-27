@@ -1,0 +1,9 @@
+{
+  "asset": "hero-form-checkpoint.png",
+  "generated_at": "2026-08-27",
+  "generator": "/opt/fleet/lib/gen-image.sh (Azure AI Foundry factory-image deployment)",
+  "size": "1536x1024",
+  "quality": "high",
+  "prompt": "Use case: stylized-concept. Asset type: responsive landing-page hero illustration. An abstract web form made of warm off-white pixel tiles passes through a compact local inspection checkpoint; two adjacent blank glyph tiles are visibly swapped and caught between amber bracket markers, a repeated pair of blank word bars is flagged, and clean field rows exit with small lime check pixels. Dark pixel-art demoscene console world, orthographic isometric view, crisp block geometry, restrained CRT phosphor grain, edge lighting, midnight navy background with generous negative space, warm paper, scan lime, signal amber, relay cyan, sparing coral. No people. No readable text, no letters, no numbers, no logos, no brands, no watermark, no shields, no padlocks, no brains, no medical symbols, no glossy generic 3D, no photorealism, no gradient fog.",
+  "review": "Accepted: no people, logos, watermarks, readable words, or anatomy; geometry and palette match the checkpoint-console thesis. The arrows and abstract glyph blocks are intentional status marks, not readable copy."
+}
