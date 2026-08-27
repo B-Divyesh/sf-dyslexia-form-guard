@@ -1,0 +1,17 @@
+{
+  "slug": "dyslexia-form-guard",
+  "title": "Form Guard",
+  "territory": "utilities",
+  "user": "A dyslexic user completing high-stakes web forms who wants to catch avoidable transpositions and ambiguous typed labels before submission without surrendering form data to a service.",
+  "smallest_useful_product": "A browser extension invoked before submit that reads visible editable fields aloud/on screen, flags repeated words, adjacent transpositions and inconsistent retyped values, and offers a one-field-at-a-time review mode.",
+  "success_measure": "In a seeded form set, users catch at least 70% of intended transposition/duplicate errors while generating no more than one false alert per form.",
+  "artifact_class": "browser-extension",
+  "monetization": "one-time",
+  "constraints": "Local-only analysis; disable by default on password, banking, health and government domains; never persist field values; accessibility review must not make invalid claims about medical benefit.",
+  "non_goals": [
+    "Automatic form submission",
+    "Credit or identity decisions",
+    "Cloud spell correction",
+    "Diagnosing or treating dyslexia"
+  ]
+}
