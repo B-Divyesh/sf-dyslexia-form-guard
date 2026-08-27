@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Form Guard review</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to review</a>
+    <header class="topbar">
+      <div class="brand" aria-label="Form Guard">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>FORM GUARD</span>
+      </div>
+      <span id="network-status" class="network"><span aria-hidden="true">●</span> LOCAL</span>
+    </header>
+
+    <main id="main">
+      <section id="ready-view" class="view" aria-labelledby="main-title">
+        <p class="eyebrow">PRIVATE CHECKPOINT / READY</p>
+        <h1 id="main-title">Review before you send.</h1>
+        <p class="lede">Form values stay in this tab and disappear when this window closes.</p>
+        <button id="scan-button" class="button button-primary" type="button">
+          <span aria-hidden="true">▶</span> Start form review
+        </button>
+        <p class="shortcut">Keyboard: <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd></p>
+      </section>
+
+      <section id="loading-view" class="view" aria-labelledby="loading-title" hidden>
+        <p class="eyebrow">LOCAL SCAN / RUNNING</p>
+        <h2 id="loading-title">Reading visible fields…</h2>
+        <div class="scan-track" aria-hidden="true"><span></span></div>
+        <p>No text is sent to a server.</p>
+      </section>
+
+      <section id="blocked-view" class="view" aria-labelledby="blocked-title" hidden>
+        <p class="eyebrow eyebrow-danger">PAUSED BY DEFAULT</p>
+        <h2 id="blocked-title">This page needs your say-so.</h2>
+        <p id="blocked-detail"></p>
+        <div class="notice"><span aria-hidden="true">!</span><p>Password fields are always skipped, even when you enable this site.</p></div>
+        <button id="enable-site-button" class="button button-primary" type="button">Enable on this site</button>
+        <button id="cancel-block-button" class="button button-quiet" type="button">Keep paused</button>
+      </section>
+
+      <section id="empty-view" class="view" aria-labelledby="empty-title" hidden>
+        <p class="eyebrow">SCAN COMPLETE / 00 FIELDS</p>
+        <h2 id="empty-title">No visible editable fields found.</h2>
+        <p>Open the form step you want to check, then try again. Hidden and password fields are not read.</p>
+        <button class="button button-primary retry-button" type="button">Scan again</button>
+      </section>
+
+      <section id="error-view" class="view" aria-labelledby="error-title" hidden>
+        <p class="eyebrow eyebrow-danger">CONNECTION / PAUSED</p>
+        <h2 id="error-title">This page could not be reviewed.</h2>
+        <p id="error-detail">Reload the page and try again.</p>
+        <button class="button button-primary retry-button" type="button">Try again</button>
+      </section>
+
+      <section id="review-view" class="view review-view" aria-labelledby="field-label" hidden>
+        <div class="review-status">
+          <span id="field-counter">FIELD 01 / 01</span>
+          <span id="finding-counter" class="finding-counter">0 CHECKS</span>
+        </div>
+        <div class="field-panel">
+          <p class="eyebrow">CURRENT FIELD</p>
+          <h2 id="field-label" tabindex="-1">Field label</h2>
+          <p id="field-value" class="field-value"></p>
+        </div>
+        <div id="field-findings" class="field-findings" aria-live="polite"></div>
+        <div class="review-controls" aria-label="Review controls">
+          <button id="previous-button" class="icon-button" type="button" aria-label="Previous field">←<span>Back</span></button>
+          <button id="speak-button" class="icon-button speak-button" type="button" aria-label="Read this field aloud">◖<span>Read</span></button>
+          <button id="next-button" class="icon-button" type="button" aria-label="Next field">→<span>Next</span></button>
+        </div>
+        <button id="finish-button" class="button button-quiet finish-button" type="button">Finish and clear highlight</button>
+        <p class="arrow-hint">Use <kbd>←</kbd> and <kbd>→</kbd> to move between fields.</p>
+      </section>
+
+      <div id="announcer" class="sr-only" aria-live="assertive"></div>
+    </main>
+
+    <footer class="popup-footer">
+      <details id="plus-details">
+        <summary><span>GUARD+ / REVIEW OPTIONS</span><span aria-hidden="true">＋</span></summary>
+        <div class="plus-content">
+          <p id="license-status">Free review is active. Guard+ adds flagged-first ordering for a $12 one-time purchase.</p>
+          <label class="setting-row" for="flagged-first">
+            <span><b>Review flagged fields first</b><small>Convenience option; every field remains available.</small></span>
+            <input id="flagged-first" type="checkbox" disabled />
+          </label>
+          <a class="button button-primary buy-link" href="https://api.sociobot.in/api/v1/products/dyslexia-form-guard/checkout" target="_blank">Buy Guard+ — $12 once</a>
+          <form id="restore-form" class="restore-form">
+            <label for="license-token">Have a license? Paste it</label>
+            <div><input id="license-token" type="password" autocomplete="off" spellcheck="false" /><button type="submit">Verify</button></div>
+          </form>
+          <p class="legal-links"><a href="https://dyslexia-form-guard.sociobot.in/privacy/" target="_blank">Privacy</a> · <a href="https://dyslexia-form-guard.sociobot.in/terms/" target="_blank">Terms</a></p>
+        </div>
+      </details>
+    </footer>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

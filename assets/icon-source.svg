@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Form Guard checkpoint mark</title>
+  <rect width="128" height="128" rx="18" fill="#090c14"/>
+  <path fill="#b8f34a" d="M18 18h38v14H32v24H18V18Zm54 0h38v38H96V32H72V18ZM18 72h14v24h24v14H18V72Zm78 0h14v38H72V96h24V72Z"/>
+  <path fill="#65d9e8" d="m40 69 9-9 10 10 22-24 10 9-32 35-19-21Z"/>
+</svg>
