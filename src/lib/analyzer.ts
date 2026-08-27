@@ -21,7 +21,7 @@ export function adjacentTranspositionCandidate(word: string): string | null {
     const candidate = `${lower.slice(0, index)}${lower[index + 1]}${lower[index]}${lower.slice(index + 2)}`;
     if (CHECK_WORDS.has(candidate)) matches.add(candidate);
   }
-  return matches.size === 1 ? [...matches][0] : null;
+  return matches.size === 1 ? ([...matches][0] ?? null) : null;
 }
 
 function normalizedPairLabel(label: string): string {

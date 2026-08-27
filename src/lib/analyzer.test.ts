@@ -36,8 +36,7 @@ describe('analyseFields', () => {
       field(1, 'Confirm email', 'two@example.com')
     ]);
     expect(findings).toHaveLength(1);
-    expect(findings[0].kind).toBe('mismatch');
-    expect(findings[0].fieldIndexes).toEqual([0, 1]);
+    expect(findings[0]).toMatchObject({ kind: 'mismatch', fieldIndexes: [0, 1] });
   });
 
   it('uses native validity without warning on empty optional fields', () => {
@@ -46,7 +45,7 @@ describe('analyseFields', () => {
       field(1, 'Phone', '', { valid: false, validationMessage: 'Required.' })
     ]);
     expect(findings).toHaveLength(1);
-    expect(findings[0].detail).toBe('Include an @.');
+    expect(findings[0]).toMatchObject({ detail: 'Include an @.' });
   });
 
   it('returns no findings for a clean form', () => {

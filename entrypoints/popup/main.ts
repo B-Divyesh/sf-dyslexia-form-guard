@@ -128,6 +128,10 @@ function fieldFindings(field: FieldSnapshot): Finding[] {
 
 function renderField(): void {
   const field = fields[position];
+  if (!field) {
+    showView('empty');
+    return;
+  }
   const relevant = fieldFindings(field);
   elements.fieldCounter.textContent = `FIELD ${String(position + 1).padStart(2, '0')} / ${String(fields.length).padStart(2, '0')}`;
   elements.findingCounter.textContent = findings.length === 0 ? 'NO ALERTS' : `${findings.length} ${findings.length === 1 ? 'CHECK' : 'CHECKS'}`;
@@ -176,6 +180,7 @@ function speakCurrentField(): void {
   }
   window.speechSynthesis.cancel();
   const field = fields[position];
+  if (!field) return;
   const relevant = fieldFindings(field);
   const text = `${field.label}. ${field.value || 'Blank'}. ${relevant.map((finding) => `${finding.title}. ${finding.detail}`).join(' ')}`;
   const utterance = new SpeechSynthesisUtterance(text);
