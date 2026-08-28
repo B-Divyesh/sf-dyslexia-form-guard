@@ -65,7 +65,7 @@ export function analyseFields(fields: FieldSnapshot[]): Finding[] {
       });
     }
 
-    if (!field.valid && field.value.trim()) {
+    if (!field.valid && (field.required || field.value.trim())) {
       findings.push({
         id: fieldFindingId('validation', [field.index]),
         kind: 'validation',

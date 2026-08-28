@@ -1,6 +1,6 @@
 {
   "name": "dyslexia-form-guard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,8 @@
     "test:a11y": "node scripts/a11y-check.mjs",
     "test:watch": "vitest",
     "build:extension": "wxt build",
-    "build:site": "vite build --config vite.site.config.ts",
+    "package:extension": "node scripts/package-extension.mjs",
+    "build:site": "vite build --config vite.site.config.ts && npm run build:extension && npm run package:extension",
     "build": "node scripts/build-all.mjs",
     "test:release": "node scripts/verify-release.mjs",
     "check": "tsc --noEmit && npm test && npm run build && npm run test:release"

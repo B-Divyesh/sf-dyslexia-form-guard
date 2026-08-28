@@ -8,8 +8,16 @@ describe('sensitiveDomainReason', () => {
     expect(sensitiveDomainReason('patient.health.example')).toBe('health-related domain');
   });
 
+  it('pauses known banking and health providers, including their subdomains', () => {
+    expect(sensitiveDomainReason('chase.com')).toBe('banking domain');
+    expect(sensitiveDomainReason('secure.chase.com')).toBe('banking domain');
+    expect(sensitiveDomainReason('mychart.com')).toBe('health-related domain');
+    expect(sensitiveDomainReason('portal.mychart.com')).toBe('health-related domain');
+  });
+
   it('leaves ordinary sites available', () => {
     expect(sensitiveDomainReason('example.com')).toBeNull();
+    expect(sensitiveDomainReason('riverbank.example')).toBeNull();
   });
 
   it('creates an origin-like site key without paths or values', () => {

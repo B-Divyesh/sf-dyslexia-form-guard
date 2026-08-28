@@ -44,7 +44,8 @@ To load the development extension, open `chrome://extensions`, enable Developer 
 ```sh
 npm test             # unit tests for analysis and domain policy
 npm run check        # TypeScript, unit tests, and complete production build
-npm run build        # exact factory build command
+npm run build        # clean full production build
+npm run build:site   # deployment build: site, MV3 extension, and download ZIP
 ```
 
 The build creates:
@@ -72,7 +73,7 @@ The safe seeded practice form at `/lab/` contains exactly three expected alerts 
 
 ## Deployment
 
-Deploy the complete `dist/site/` directory as the static site root, including `downloads/form-guard-chrome.zip` and `staticwebapp.config.json`. The latter is Azure Static Web Apps' native configuration: it prevents a missing download from being rewritten to the homepage and applies the cache and privacy headers. The factory owns DNS and deployment. The billing integration uses the slug-only endpoint `https://api.sociobot.in/api/v1/products/dyslexia-form-guard/...`; no provider credentials or product IDs are stored here. The factory must register the product before paid checkout is live.
+Deploy the complete `dist/site/` directory made by `npm run build:site`, including `downloads/form-guard-chrome.zip` and `staticwebapp.config.json`. `build:site` deliberately packages the extension because it is the factory deployment command; this prevents a landing-site-only deploy from dropping the install artifact. The configuration prevents a missing download from being rewritten to the homepage and applies the cache and privacy headers. The factory owns DNS and deployment. The billing integration uses the slug-only endpoint `https://api.sociobot.in/api/v1/products/dyslexia-form-guard/...`; no provider credentials or product IDs are stored here. The factory must register the product before paid checkout is live.
 
 ## License
 

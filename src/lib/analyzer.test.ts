@@ -39,13 +39,18 @@ describe('analyseFields', () => {
     expect(findings[0]).toMatchObject({ kind: 'mismatch', fieldIndexes: [0, 1] });
   });
 
-  it('uses native validity without warning on empty optional fields', () => {
+  it('reports invalid required blanks while leaving invalid optional blanks quiet', () => {
     const findings = analyseFields([
       field(0, 'Email', 'wrong', { controlType: 'email', valid: false, validationMessage: 'Include an @.' }),
-      field(1, 'Phone', '', { valid: false, validationMessage: 'Required.' })
+      field(1, 'Phone', '', { valid: false, validationMessage: 'This field is required.', required: true }),
+      field(2, 'Optional note', '', { valid: false, validationMessage: 'Optional fields may be blank.' })
     ]);
-    expect(findings).toHaveLength(1);
-    expect(findings[0]).toMatchObject({ detail: 'Include an @.' });
+    expect(findings).toHaveLength(2);
+    expect(findings).toEqual(expect.arrayContaining([
+      expect.objectContaining({ fieldIndexes: [0], detail: 'Include an @.' }),
+      expect.objectContaining({ fieldIndexes: [1], kind: 'validation', detail: 'This field is required.' })
+    ]));
+    expect(findings.find((finding) => finding.fieldIndexes.includes(2))).toBeUndefined();
   });
 
   it('returns no findings for a clean form', () => {
