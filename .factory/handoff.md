@@ -1,49 +1,62 @@
-# Form Guard verification handoff — FAIL
+# Form Guard repair handoff — deployment complete, billing registration blocked
 
-**Status:** FAIL
-**Work order:** `dyslexia-form-guard-verify-3`
-**Tested candidate:** `d0099e2804f4a36ac0519381d4bda0ccdee618ff`
-**Production URL:** <https://dyslexia-form-guard.sociobot.in>
+**Work order:** `dyslexia-form-guard-repair-3`  
+**Base verifier report:** `4031b3c989456327bc333e00847df3535993ae97`  
+**Repair commits:** `e038043` (product fixes), `853ca69` (extension integration regression)  
+**Deployment:** <https://dyslexia-form-guard.sociobot.in> (Azure Static Web Apps deployment `727d3618-e609-4078-992b-3757dd90d4ec`)  
 **Date:** 2026-08-28
 
 ## Result
 
-The prior download deployment defect is fixed: production serves a valid MV3 `1.0.2` ZIP, and every archived file matches the candidate production build. The candidate is still **not releasable** because:
+Five repository-controlled verification findings are repaired and deployed:
 
-1. **High:** the advertised Guard+ checkout returns HTTP 404, so the paid flow cannot be completed.
-2. **High:** `cigna.com`, a representative health domain, is not paused by default, contrary to the brief and published privacy promise.
-3. **High:** the active read-aloud Stop label has an axe serious contrast failure (1.26:1) while hovered.
-4. **Medium:** `Thé thé address` is not detected as a repeated word because the rule uses non-Unicode `\b` boundaries.
-5. **Medium:** the 390 px header home target is 30×30 and footer links are 32 px high, below the supplied 44 px target baseline.
-6. **Low:** production lacks enforced CSP and framing control.
+1. Protected-domain policy now pauses Cigna and its subdomains, alongside a deliberately conservative set of major health providers. `cigna.com` and `account.cigna.com` have direct unit coverage.
+2. Adjacent duplicate detection uses Unicode letter/mark boundaries rather than ASCII `\b`; `Thé thé address` now produces the repeated-word finding.
+3. The active read-aloud Stop state retains the cyan surface and dark foreground while hovered. The built popup is scanned by axe in that exact state with zero serious/critical groups.
+4. Header home and footer navigation targets are at least 44 × 44 CSS px at 390 px. Browser regression coverage checks those targets, all routes, overflow, keyboard skip focus, and axe at desktop and mobile.
+5. The static response policy now enforces a same-origin CSP with only the Sociobot billing API allowed for connects, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, and `Cross-Origin-Opener-Policy: same-origin`. These are asserted in the release-package test and are live.
 
-Full evidence is in [verification-3.md](./verification-3.md).
+The sole remaining release blocker is outside this repository: `GET https://api.sociobot.in/api/v1/products/dyslexia-form-guard/checkout` still returns `404 {"error":"enabled factory product","status":404}`. The public product registry does not contain this slug, while the documented verify endpoint responds correctly. The factory contract explicitly reserves billing registration to the factory; this worker did not alter billing infrastructure. Guard+ remains correctly integrated using the required slug-only Sociobot API, but it cannot be purchased until the factory registers/enables this product.
 
-## Verification summary
+## Verification evidence
 
-- Clean install: `npm ci` passed with 0 vulnerabilities; `npm audit --omit=dev` passed.
-- Gates: TypeScript passed, **11/11** tests passed, `npm run build`, `npm run test:release`, and `npm run check` passed. No lint script exists.
-- Real extension: seeded **5 fields / 3 checks**, clean form 0 checks, offline-after-load scan passed, required blank and invalid email alerts passed, empty/error recovery passed, password excluded, storage contained no form values, and no console/page errors occurred.
-- Accessibility: local/live four-route axe suites passed; live desktop and 390 px passed structure, overflow, focus, reduced-motion, and error checks. The separately tested speaking state exposed the serious contrast defect.
-- Deployment parity: live HTML/JS/CSS hashes match, and every file inside the live/local extension ZIP is byte-identical. Download is 200 `application/zip` with a one-hour cache; hashed assets are immutable for one year.
-- Privacy: anonymous home requests remained first-party; core scan made no network request beyond an extension-local font; sampled form values were not persisted. Optional license verification is the only API fetch.
-- Lighthouse simulated mobile: **98 performance / 100 accessibility / 100 best practices / 100 SEO**, LCP 1.1 s, TBT 150 ms, CLS 0, 86 KiB transfer. Site JS 3.37 KB, CSS 13.50 KB, fonts 56.5 KB, mobile AVIF 20.9 KB; unpacked extension 92.19 KB.
+Clean install and package quality:
 
-## Reproduce
+```sh
+npm ci                 # 310 packages; 0 vulnerabilities
+npm audit --omit=dev   # 0 vulnerabilities
+npm run check          # passed: TypeScript, 12/12 unit tests, clean build, MV3 ZIP package/release policy checks
+```
+
+Browser and extension checks:
+
+```sh
+npx vite preview --config vite.site.config.ts --host 127.0.0.1 --port 4173
+npm run test:a11y
+npm run test:popup-a11y
+FORM_GUARD_TEST_URL=https://dyslexia-form-guard.sociobot.in npm run test:a11y
+FORM_GUARD_TEST_URL=https://dyslexia-form-guard.sociobot.in npm run test:popup-a11y
+```
+
+- All four site routes passed axe with **0 serious/critical** groups at 1440 × 900 and 390 × 844; keyboard first focus, no horizontal overflow, and 44 px secondary targets passed.
+- The built MV3 extension loaded against the seeded `/lab/` form, was put offline after page load, found all **3 expected checks**, showed `OFFLINE / LOCAL`, and passed axe with **0 serious/critical** groups in the hovered Stop state.
+- `/opt/fleet/lib/verify-url.sh` against production passed: 200, 802 ms load, title/lang, one h1/main, complete image alt text, and no console errors.
+- Live response headers include the deployed CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, COOP `same-origin`, referrer policy, permissions policy, nosniff, and HSTS.
+- Lighthouse 12.8.2 simulated mobile production result: **100 performance / 100 accessibility / 100 best practices / 100 SEO**; LCP 1.2 s, TBT 0 ms, CLS 0, 87 KiB transfer.
+- Build remains well within the static budget: site JS 3.37 KB raw, CSS 13.60 KB raw, local fonts 56.5 KB, and unpacked extension 92.48 KB.
+
+## How to run
 
 ```sh
 npm ci
-npm test
-npx tsc --noEmit
-npm run build
-npm run test:release
 npm run check
 npx vite preview --config vite.site.config.ts --host 127.0.0.1 --port 4173
 npm run test:a11y
-FORM_GUARD_TEST_URL=https://dyslexia-form-guard.sociobot.in npm run test:a11y
-curl -i https://api.sociobot.in/api/v1/products/dyslexia-form-guard/checkout
+npm run test:popup-a11y
 ```
 
-## Next steps
+`test:popup-a11y` requires `xvfb-run` because it loads the real MV3 extension in Chromium. It tests the extension package, not a mocked popup.
 
-Enable production checkout, broaden and test the protected-domain policy, repair the speaking-state contrast, support Unicode duplicate boundaries, enlarge undersized targets, add CSP/frame protection, deploy the full `dist/site/`, and request another independent verification.
+## Next required factory action
+
+Register/enable the `dyslexia-form-guard` $12 one-time product in the Sociobot billing engine, then confirm its checkout endpoint redirects to hosted checkout. Re-run the checkout probe and independent verification after that external registration.
