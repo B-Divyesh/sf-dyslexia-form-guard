@@ -7,6 +7,7 @@ import { resolve } from 'node:path';
 
 const extensionPath = resolve('dist/extension/chrome-mv3');
 const profilePath = await mkdtemp(resolve(tmpdir(), 'form-guard-popup-'));
+const siteUrl = process.env.FORM_GUARD_TEST_URL || 'http://127.0.0.1:4173';
 let context;
 
 try {
@@ -17,20 +18,26 @@ try {
   let worker = context.serviceWorkers()[0];
   if (!worker) worker = await context.waitForEvent('serviceworker');
   const extensionId = new URL(worker.url()).host;
+  const lab = await context.newPage();
+  await lab.goto(`${siteUrl}/lab/`, { waitUntil: 'networkidle' });
   const page = await context.newPage();
   await page.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
+  await context.setOffline(true);
+  await lab.bringToFront();
+  await page.locator('#scan-button').click();
+  await page.locator('#review-view:not([hidden])').waitFor();
+  assert.match(await page.locator('#network-status').textContent() ?? '', /OFFLINE \/ LOCAL/, 'Review must remain local and available after the page goes offline.');
+  assert.match(await page.locator('#finding-counter').textContent() ?? '', /3 CHECKS/, 'The seeded lab form must reach extension review with its three expected checks.');
 
   // Exercise the exact state that previously failed: Stop is visible while
   // the pointer remains over the control, so hover cannot override its cyan
   // background with the low-contrast console surface.
   await page.evaluate(() => {
-    const ready = document.querySelector('#ready-view');
     const review = document.querySelector('#review-view');
     const button = document.querySelector('#speak-button');
-    if (!(ready instanceof HTMLElement) || !(review instanceof HTMLElement) || !(button instanceof HTMLButtonElement)) {
+    if (!(review instanceof HTMLElement) || !(button instanceof HTMLButtonElement)) {
       throw new Error('Popup review controls are unavailable.');
     }
-    ready.hidden = true;
     review.hidden = false;
     button.classList.add('speaking');
     const label = button.querySelector('span');

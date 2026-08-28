@@ -59,7 +59,15 @@ For the browser accessibility suite, serve the built site and run:
 ```sh
 npx vite preview --config vite.site.config.ts --host 127.0.0.1 --port 4173
 npm run test:a11y
+npm run test:popup-a11y
 ```
+
+`test:a11y` checks every landing-site route at desktop and 390 px, including
+keyboard skip links, overflow, and secondary 44 px targets. `test:popup-a11y`
+loads the built MV3 extension against `/lab/`, takes the page offline after it
+loads, verifies the three seeded checks, and runs axe while the read-aloud
+control is in its hovered Stop state. It uses `xvfb-run` for Chromium's
+extension UI in headless Linux environments.
 
 The safe seeded practice form at `/lab/` contains exactly three expected alerts and is useful for a real extension smoke test.
 
