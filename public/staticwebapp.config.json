@@ -1,0 +1,38 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/assets/*",
+      "/fonts/*",
+      "/downloads/*",
+      "/favicon.png",
+      "/robots.txt",
+      "/sitemap.xml"
+    ]
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+  },
+  "routes": [
+    {
+      "route": "/assets/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/fonts/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/downloads/*",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    }
+  ]
+}

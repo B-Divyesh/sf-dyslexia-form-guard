@@ -1,6 +1,6 @@
 {
   "name": "dyslexia-form-guard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,16 +13,19 @@
     "build:extension": "wxt build",
     "build:site": "vite build --config vite.site.config.ts",
     "build": "node scripts/build-all.mjs",
-    "check": "tsc --noEmit && npm test && npm run build"
+    "test:release": "node scripts/verify-release.mjs",
+    "check": "tsc --noEmit && npm test && npm run build && npm run test:release"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@fontsource-variable/atkinson-hyperlegible-next": "^5.3.0",
     "@proj-airi/font-departure-mono": "0.12.0-beta.4",
     "@types/archiver": "^6.0.3",
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^22.15.30",
     "archiver": "^7.0.1",
     "playwright": "^1.58.2",
+    "jsdom": "^26.1.0",
     "sharp": "^0.35.4",
     "typescript": "^5.8.3",
     "vite": "^7.1.3",

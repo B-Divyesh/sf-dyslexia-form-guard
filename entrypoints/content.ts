@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import { defineContentScript } from 'wxt/utils/define-content-script';
+import { labelText } from '../src/lib/field-label';
 import type { FieldSnapshot, ProbeResult } from '../src/lib/types';
 
 const HIGHLIGHT_ID = 'form-guard-current-field';
@@ -22,7 +23,7 @@ function isPassword(element: Editable): boolean {
 }
 
 function fieldLabel(element: Editable): string {
-  const labels = element.labels ? [...element.labels].map((label) => label.textContent?.trim()).filter(Boolean) : [];
+  const labels = element.labels ? [...element.labels].map(labelText).filter(Boolean) : [];
   const labelledBy = element.getAttribute('aria-labelledby')
     ?.split(/\s+/)
     .map((id) => document.getElementById(id)?.textContent?.trim())

@@ -72,7 +72,7 @@ The safe seeded practice form at `/lab/` contains exactly three expected alerts 
 
 ## Deployment
 
-Deploy `dist/site/` as the static site root. The factory owns DNS and deployment. The billing integration uses the slug-only endpoint `https://api.sociobot.in/api/v1/products/dyslexia-form-guard/...`; no provider credentials or product IDs are stored here. The factory must register the product before paid checkout is live.
+Deploy the complete `dist/site/` directory as the static site root, including `downloads/form-guard-chrome.zip` and `staticwebapp.config.json`. The latter is Azure Static Web Apps' native configuration: it prevents a missing download from being rewritten to the homepage and applies the cache and privacy headers. The factory owns DNS and deployment. The billing integration uses the slug-only endpoint `https://api.sociobot.in/api/v1/products/dyslexia-form-guard/...`; no provider credentials or product IDs are stored here. The factory must register the product before paid checkout is live.
 
 ## License
 
