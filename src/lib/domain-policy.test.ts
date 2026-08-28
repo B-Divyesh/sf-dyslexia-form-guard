@@ -13,6 +13,8 @@ describe('sensitiveDomainReason', () => {
     expect(sensitiveDomainReason('secure.chase.com')).toBe('banking domain');
     expect(sensitiveDomainReason('mychart.com')).toBe('health-related domain');
     expect(sensitiveDomainReason('portal.mychart.com')).toBe('health-related domain');
+    expect(sensitiveDomainReason('cigna.com')).toBe('health-related domain');
+    expect(sensitiveDomainReason('account.cigna.com')).toBe('health-related domain');
   });
 
   it('leaves ordinary sites available', () => {

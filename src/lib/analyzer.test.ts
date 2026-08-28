@@ -30,6 +30,14 @@ describe('analyseFields', () => {
     expect(findings.map((finding) => finding.kind)).toEqual(['repeat', 'transposition']);
   });
 
+  it('flags adjacent repeated words with Unicode letters', () => {
+    const findings = analyseFields([field(0, 'Street address', 'Thé thé address')]);
+    expect(findings).toEqual([expect.objectContaining({
+      kind: 'repeat',
+      detail: '“Thé” appears twice in a row.'
+    })]);
+  });
+
   it('flags mismatched confirmation fields once', () => {
     const findings = analyseFields([
       field(0, 'Email', 'one@example.com'),

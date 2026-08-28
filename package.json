@@ -9,6 +9,7 @@
     "prepare": "wxt prepare",
     "test": "vitest run",
     "test:a11y": "node scripts/a11y-check.mjs",
+    "test:popup-a11y": "xvfb-run -a node scripts/popup-a11y-check.mjs",
     "test:watch": "vitest",
     "build:extension": "wxt build",
     "package:extension": "node scripts/package-extension.mjs",

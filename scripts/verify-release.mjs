@@ -20,6 +20,12 @@ const config = JSON.parse(await readFile(configPath, 'utf8'));
 assert.ok(config.navigationFallback?.exclude?.includes('/downloads/*'), 'Static host fallback must not rewrite extension downloads to index.html.');
 assert.equal(config.globalHeaders?.['Referrer-Policy'], 'no-referrer', 'Static host must send the privacy response policy.');
 assert.equal(config.globalHeaders?.['Permissions-Policy'], 'camera=(), microphone=(), geolocation=()', 'Static host must disable unused sensitive browser capabilities.');
+assert.equal(config.globalHeaders?.['X-Frame-Options'], 'DENY', 'Static host must prevent framing.');
+assert.equal(config.globalHeaders?.['Cross-Origin-Opener-Policy'], 'same-origin', 'Static host must isolate its browsing context.');
+const csp = config.globalHeaders?.['Content-Security-Policy'] ?? '';
+assert.match(csp, /default-src 'self'/, 'Static host must enforce a same-origin CSP.');
+assert.match(csp, /frame-ancestors 'none'/, 'CSP must prevent framing.');
+assert.match(csp, /connect-src 'self' https:\/\/api\.sociobot\.in/, 'CSP must allow only the billing API beyond same-origin.');
 
 const cacheFor = (route) => config.routes?.find((entry) => entry.route === route)?.headers?.['Cache-Control'];
 assert.equal(cacheFor('/assets/*'), 'public, max-age=31536000, immutable');

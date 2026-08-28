@@ -4,7 +4,12 @@ const BANKING_SUFFIXES = [
 ];
 
 const HEALTH_SUFFIXES = [
-  'kaiserpermanente.org', 'mychart.com', 'mychart.org'
+  // Widely used patient portals and national health providers. This list is
+  // intentionally conservative: a pause asks for per-origin consent; it never
+  // prevents someone from using the local review after that explicit choice.
+  'aetna.com', 'anthem.com', 'bcbs.com', 'cigna.com', 'cvshome.com',
+  'kaiserpermanente.org', 'mychart.com', 'mychart.org', 'optum.com',
+  'unitedhealthcare.com', 'walgreens.com'
 ];
 
 const BANKING_LABELS = new Set(['bank', 'banking', 'creditunion', 'mortgage', 'mybank']);

@@ -124,6 +124,7 @@ kbd { display: inline-block; padding: 2px 5px; border: 1px solid #536780; border
 .icon-button:disabled { opacity: .4; cursor: not-allowed; }
 .speak-button { border-color: var(--cyan); color: var(--cyan); }
 .speak-button.speaking { background: var(--cyan); color: var(--void); }
+.speak-button.speaking:hover:not(:disabled) { border-color: var(--cyan); background: var(--cyan); color: var(--void); }
 .finish-button { min-height: 44px; font-size: 14px; }
 .arrow-hint { margin-bottom: 0; }
 .popup-footer { border-top: 1px solid #2b3b55; background: #0c111d; }

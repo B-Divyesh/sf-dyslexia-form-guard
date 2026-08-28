@@ -10,6 +10,10 @@ const CHECK_WORDS = new Set([
 ]);
 
 const NORMALISE_PAIR_WORDS = /\b(confirm|confirmation|retype|retyped|re-enter|reenter|repeat|again|verify|verification)\b/giu;
+// JavaScript's \b only recognises ASCII "word" characters. Use explicit
+// Unicode letter boundaries so names and addresses containing accented letters
+// receive the same adjacent-duplicate check as ASCII text.
+const REPEATED_WORD = /(?<![\p{L}\p{M}])([\p{L}][\p{L}\p{M}'’-]*)\s+\1(?![\p{L}\p{M}])/iu;
 
 export function adjacentTranspositionCandidate(word: string): string | null {
   const lower = word.toLocaleLowerCase();
@@ -40,7 +44,7 @@ export function analyseFields(fields: FieldSnapshot[]): Finding[] {
   const findings: Finding[] = [];
 
   for (const field of fields) {
-    const repeated = field.value.match(/\b([\p{L}][\p{L}'’-]*)\s+\1\b/iu);
+    const repeated = field.value.match(REPEATED_WORD);
     if (repeated) {
       findings.push({
         id: fieldFindingId('repeat', [field.index]),
