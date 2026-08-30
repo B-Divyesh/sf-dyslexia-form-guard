@@ -42,6 +42,13 @@
     "sandbox": "A clean production build is unpacked; ZIP integrity, manifest version, extension version, and response policy are asserted."
   },
   {
+    "id": "sample-demo-reset",
+    "claim": "The sample form does not submit or save changes and can be reset.",
+    "where": "landing page, practice form, README",
+    "test": "npm run test:a11y",
+    "sandbox": "At desktop and 390px, change a seeded value, activate Reset demo, assert the original value returns, and assert submit remains disabled."
+  },
+  {
     "id": "guard-plus-checkout",
     "claim": "Guard+ is a $12 one-time purchase through hosted Sociobot and Dodo checkout.",
     "where": "landing page, popup, README",

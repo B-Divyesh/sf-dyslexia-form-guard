@@ -37,6 +37,18 @@ for (const viewport of viewports) {
       failed = true;
     }
 
+    if (route === '/lab/') {
+      // @claim:sample-demo-reset
+      await page.locator('#practice-name').fill('Changed sample value');
+      await page.getByRole('button', { name: 'Reset demo' }).click();
+      const sampleReset = await page.locator('#practice-name').inputValue() === 'Sam Rivera';
+      const submitDisabled = await page.getByRole('button', { name: 'Practice submit (disabled)' }).isDisabled();
+      if (!sampleReset || !submitDisabled) {
+        console.error(`  ${viewport.name} ${route}: sample reset or disabled submit failed`);
+        failed = true;
+      }
+    }
+
     if (viewport.name === 'mobile') {
       const targets = await page.locator('.site-header .logo, .site-footer nav a').evaluateAll((nodes) => nodes.map((node) => {
         const box = node.getBoundingClientRect();

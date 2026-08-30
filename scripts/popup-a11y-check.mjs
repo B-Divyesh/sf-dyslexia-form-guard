@@ -110,7 +110,34 @@ try {
     for (const node of violation.nodes) console.error(`  ${node.target.join(' ')}`);
   }
   if (blockers.length) process.exitCode = 1;
-  console.log(`Packaged popup flow: offline, keyboard, password, privacy, and speaking state passed; ${results.violations.length} axe groups, ${blockers.length} serious/critical`);
+
+  await page.locator('#finish-button').click();
+  await lab.locator('#sample-form').evaluate((form) => form.replaceChildren());
+  await lab.bringToFront();
+  await page.locator('#scan-button').click();
+  await page.locator('#empty-view:not([hidden])').waitFor();
+  await lab.locator('#sample-form').evaluate((form) => {
+    const label = document.createElement('label');
+    label.textContent = 'Reference';
+    const input = document.createElement('input');
+    input.required = true;
+    input.id = 'recovery-reference';
+    label.htmlFor = input.id;
+    form.append(label, input);
+  });
+  await lab.bringToFront();
+  await page.locator('#empty-view .retry-button').click();
+  await page.locator('#review-view:not([hidden])').waitFor();
+  assert.match(await page.locator('#finding-counter').textContent() ?? '', /1 CHECK/, 'A blank native required field must produce a check after empty-state recovery.');
+  await page.locator('#finish-button').click();
+  await lab.locator('#recovery-reference').fill('A-104');
+  await lab.bringToFront();
+  await page.locator('#scan-button').click();
+  await page.locator('#review-view:not([hidden])').waitFor();
+  assert.match(await page.locator('#finding-counter').textContent() ?? '', /NO ALERTS/, 'Repairing the required field must rescan cleanly.');
+  assert.deepEqual(outboundRequests, [], 'All packaged extension scenarios must remain local.');
+  assert.deepEqual(consoleErrors, [], 'All packaged extension scenarios must remain console-error free.');
+  console.log(`Packaged popup flow: offline, keyboard, password, privacy, empty recovery, native validation, and speaking state passed; ${results.violations.length} axe groups, ${blockers.length} serious/critical`);
 } finally {
   await context?.close();
   await rm(profilePath, { recursive: true, force: true });
