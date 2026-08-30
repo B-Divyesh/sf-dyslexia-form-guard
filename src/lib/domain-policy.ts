@@ -37,6 +37,5 @@ export function sensitiveDomainReason(hostname: string): string | null {
 }
 
 export function siteKey(url: string): string {
-  const parsed = new URL(url);
-  return `${parsed.protocol}//${parsed.hostname}`;
+  return new URL(url).origin;
 }

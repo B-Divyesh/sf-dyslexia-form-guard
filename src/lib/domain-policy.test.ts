@@ -27,7 +27,9 @@ describe('sensitiveDomainReason', () => {
     expect(sensitiveDomainReason('riverbank.example')).toBeNull();
   });
 
-  it('creates an origin-like site key without paths or values', () => {
+  it('creates an exact origin key without paths or values', () => {
     expect(siteKey('https://forms.example/path?q=private')).toBe('https://forms.example');
+    expect(siteKey('http://127.0.0.1:4173/private-form')).toBe('http://127.0.0.1:4173');
+    expect(siteKey('http://127.0.0.1:4174/other-form')).toBe('http://127.0.0.1:4174');
   });
 });

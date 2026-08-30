@@ -7,7 +7,7 @@ export default defineConfig({
     name: 'Form Guard',
     short_name: 'Form Guard',
     description: 'Review visible form fields locally before you submit.',
-    version: '1.0.4',
+    version: '1.0.5',
     permissions: ['activeTab', 'storage'],
     host_permissions: ['<all_urls>'],
     action: {

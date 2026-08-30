@@ -48,7 +48,7 @@ for (const [relativePath, title, canonical] of pages) {
   assert.match(html, /meta property="og:image" content="https:\/\/dyslexia-form-guard\.sociobot\.in\/assets\/form-guard-social\.png"/, `${relativePath} must expose the product social image.`);
   assert.match(html, /meta name="twitter:card" content="summary_large_image"/, `${relativePath} must expose a Twitter card.`);
   assert.match(html, /link rel="apple-touch-icon" href="\/apple-touch-icon\.png"/, `${relativePath} must link an Apple touch icon.`);
-  assert.match(html, /Built by Param Factory · v1\.0\.4/, `${relativePath} footer must identify the factory and build version.`);
+  assert.match(html, /Built by Param Factory · v1\.0\.5/, `${relativePath} footer must identify the factory and build version.`);
 }
 const socialImage = await readFile(resolve(site, 'assets/form-guard-social.png'));
 const appleTouch = await readFile(resolve(site, 'apple-touch-icon.png'));

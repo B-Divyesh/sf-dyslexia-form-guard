@@ -21,6 +21,20 @@
     "sandbox": "Known representative hosts, including HSBC, Barclays, Mayo Clinic, Cleveland Clinic, Stanford Health Care, and forms.gov, are checked without browser storage or network access."
   },
   {
+    "id": "origin-scoped-permission",
+    "claim": "Enabling a paused site authorizes only that exact origin, including its non-default port.",
+    "where": "README, privacy page, popup",
+    "test": "npm ci && npm run claim -- origin-scoped-permission",
+    "sandbox": "The packaged extension enables a password form on loopback port 4173, then requires a new pause on a fresh password form at port 4174 and inspects the stored exact-origin permission."
+  },
+  {
+    "id": "editable-control-review",
+    "claim": "The review includes visible native and contenteditable fields and names selected or unselected choice state.",
+    "where": "README, privacy page, popup",
+    "test": "npm ci && npm run claim -- editable-control-review",
+    "sandbox": "The packaged extension reviews text, checked checkbox, unchecked and checked radio, select, and contenteditable controls and asserts every displayed label and state."
+  },
+  {
     "id": "offline-local-review",
     "claim": "Form review works offline after the sample page has loaded.",
     "where": "landing page, README, popup",

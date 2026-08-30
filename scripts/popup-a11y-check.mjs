@@ -9,6 +9,7 @@ const extensionPath = resolve('dist/extension/chrome-mv3');
 const profilePath = await mkdtemp(resolve(tmpdir(), 'form-guard-popup-'));
 const siteUrl = process.env.FORM_GUARD_TEST_URL || 'http://127.0.0.1:4173';
 const siteOrigin = new URL(siteUrl).origin;
+const claimUnderTest = process.env.FORM_GUARD_CLAIM;
 let context;
 
 try {
@@ -62,6 +63,8 @@ try {
   assert.equal(await lab.locator('#sample-form').evaluate((form) => form.dataset.formGuardSubmitted ?? ''), '', 'Review must not submit the form.');
 
   await context.setOffline(false);
+  const legacyHostPermission = `${new URL(siteOrigin).protocol}//${new URL(siteOrigin).hostname}`;
+  await worker.evaluate((allowedSite) => chrome.storage.local.set({ allowedSites: [allowedSite] }), legacyHostPermission);
   await lab.locator('#sample-form').evaluate((form) => {
     const password = document.createElement('input');
     password.type = 'password';
@@ -125,6 +128,29 @@ try {
   if (blockers.length) process.exitCode = 1;
 
   await page.locator('#finish-button').click();
+
+  if (claimUnderTest !== 'editable-control-review') {
+    const secondOrigin = 'http://127.0.0.1:4174';
+    await context.route(`${secondOrigin}/**`, (route) => route.fulfill({
+      contentType: 'text/html',
+      body: '<!doctype html><html><head><title>Other origin form</title></head><body><main><h1>Account</h1><label>Password <input type="password" value="OTHER-SECRET-4174"></label><label>Reference <input value="B-204"></label></main></body></html>'
+    }));
+    const otherOriginPage = await context.newPage();
+    await otherOriginPage.goto(`${secondOrigin}/form`, { waitUntil: 'domcontentloaded' });
+    outboundRequests.length = 0;
+    await otherOriginPage.bringToFront();
+    await page.locator('#scan-button').click();
+    await page.locator('#blocked-view:not([hidden])').waitFor();
+    // @claim:origin-scoped-permission
+    assert.match(await page.locator('#blocked-detail').textContent() ?? '', /page with a password field/, 'Enabling one non-default-port origin must not authorize another port on the same hostname.');
+    const originPermission = await worker.evaluate(() => chrome.storage.local.get(['allowedSites', 'allowedSitesVersion']));
+    assert.deepEqual(originPermission.allowedSites, [siteOrigin], 'The stored permission must retain the complete enabled origin, including its port.');
+    assert.equal(originPermission.allowedSitesVersion, 2, 'Origin permissions must use the current exact-origin storage format.');
+    await page.locator('#cancel-block-button').click();
+    await otherOriginPage.close();
+    await lab.bringToFront();
+  }
+
   await lab.locator('#sample-form').evaluate((form) => form.replaceChildren());
   await lab.bringToFront();
   await page.locator('#scan-button').click();
@@ -149,6 +175,71 @@ try {
   await page.locator('#scan-button').click();
   await page.locator('#review-view:not([hidden])').waitFor();
   assert.match(await page.locator('#finding-counter').textContent() ?? '', /NO ALERTS/, 'Repairing the required field must rescan cleanly.');
+  await page.locator('#finish-button').click();
+
+  await lab.locator('#sample-form').evaluate((form) => {
+    form.replaceChildren();
+    const addInput = (labelText, type, checked = false) => {
+      const label = document.createElement('label');
+      label.textContent = labelText;
+      const input = document.createElement('input');
+      input.type = type;
+      input.checked = checked;
+      input.name = type === 'radio' ? 'plan' : labelText.toLowerCase();
+      input.value = labelText.toLowerCase();
+      label.append(input);
+      form.append(label);
+    };
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Full name';
+    const name = document.createElement('input');
+    name.value = 'Sam Rivera';
+    nameLabel.append(name);
+    form.append(nameLabel);
+    addInput('Consent', 'checkbox', true);
+    addInput('Updates', 'checkbox', false);
+    addInput('Basic', 'radio', false);
+    addInput('Premium', 'radio', true);
+    const countryLabel = document.createElement('label');
+    countryLabel.textContent = 'Country';
+    const country = document.createElement('select');
+    country.append(new Option('India', 'in', true, true));
+    countryLabel.append(country);
+    form.append(countryLabel);
+    const notes = document.createElement('div');
+    notes.contentEditable = 'true';
+    notes.tabIndex = 0;
+    notes.setAttribute('role', 'textbox');
+    notes.setAttribute('aria-label', 'Visible notes');
+    notes.textContent = 'Leave at reception';
+    form.append(notes);
+  });
+  await lab.bringToFront();
+  await page.locator('#scan-button').click();
+  await page.locator('#review-view:not([hidden])').waitFor();
+  const reviewedControls = [];
+  while (true) {
+    const currentLabel = await page.locator('#field-label').textContent();
+    const currentValue = await page.locator('#field-value').textContent();
+    reviewedControls.push([currentLabel, currentValue]);
+    if (currentLabel === 'Basic') {
+      await page.locator('#speak-button').click();
+      assert.match(await page.locator('#speak-button').getAttribute('data-last-read') ?? '', /Basic\. Not selected\./, 'Read aloud must speak the unselected radio state.');
+      await page.locator('#speak-button').click();
+    }
+    if (await page.locator('#next-button').isDisabled()) break;
+    await page.locator('#next-button').click();
+  }
+  // @claim:editable-control-review
+  assert.deepEqual(reviewedControls, [
+    ['Full name', 'Sam Rivera'],
+    ['Consent', 'Checked'],
+    ['Updates', 'Not checked'],
+    ['Basic', 'Not selected'],
+    ['Premium', 'Selected'],
+    ['Country', 'India'],
+    ['Visible notes', 'Leave at reception']
+  ], 'The packaged review must expose choice state and include a visible contenteditable field.');
   await page.locator('#finish-button').click();
 
   await lab.locator('#sample-form').evaluate((form) => form.replaceChildren());

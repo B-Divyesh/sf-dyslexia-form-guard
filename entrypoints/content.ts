@@ -4,12 +4,19 @@ import { labelText } from '../src/lib/field-label';
 import type { FieldSnapshot, ProbeResult } from '../src/lib/types';
 
 const HIGHLIGHT_ID = 'form-guard-current-field';
-type Editable = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+type NativeEditable = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+type Editable = NativeEditable | HTMLElement;
+
+function isNativeEditable(element: HTMLElement): element is NativeEditable {
+  return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement;
+}
 
 function visibleEditableFields(): Editable[] {
-  return [...document.querySelectorAll<Editable>('input, textarea, select')].filter((element) => {
+  return [...document.querySelectorAll<HTMLElement>('input, textarea, select, [contenteditable]:not([contenteditable="false"])')].filter((element) => {
     if (element instanceof HTMLInputElement && ['hidden', 'submit', 'reset', 'button', 'image', 'file'].includes(element.type)) return false;
-    if (element.disabled || ('readOnly' in element && element.readOnly)) return false;
+    if (isNativeEditable(element) && element.disabled) return false;
+    if ((element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) && element.readOnly) return false;
+    if (!isNativeEditable(element) && (!element.isContentEditable || element.getAttribute('aria-disabled') === 'true')) return false;
     const style = window.getComputedStyle(element);
     return style.visibility !== 'hidden' && style.display !== 'none' && element.getClientRects().length > 0;
   });
@@ -23,7 +30,14 @@ function isPassword(element: Editable): boolean {
 }
 
 function fieldLabel(element: Editable): string {
-  const labels = element.labels ? [...element.labels].map(labelText).filter(Boolean) : [];
+  const nativeLabels = isNativeEditable(element) && element.labels ? [...element.labels] : [];
+  const enclosingLabel = element.closest('label');
+  const explicitLabels = element.id
+    ? [...document.querySelectorAll<HTMLLabelElement>('label')].filter((label) => label.htmlFor === element.id)
+    : [];
+  const labels = [...new Set([...nativeLabels, ...explicitLabels, ...(enclosingLabel ? [enclosingLabel] : [])])]
+    .map(labelText)
+    .filter(Boolean);
   const labelledBy = element.getAttribute('aria-labelledby')
     ?.split(/\s+/)
     .map((id) => document.getElementById(id)?.textContent?.trim())
@@ -31,7 +45,7 @@ function fieldLabel(element: Editable): string {
   const ariaLabel = element.getAttribute('aria-label')?.trim();
   const label = [...labels, ...labelledBy, ariaLabel].find(Boolean);
   if (label) return label.replace(/\s+/g, ' ').trim();
-  const fallback = element.name || element.id;
+  const fallback = (isNativeEditable(element) ? element.name : '') || element.id;
   return fallback ? fallback.replace(/[_-]+/g, ' ') : `Unlabelled ${element instanceof HTMLSelectElement ? 'selection' : 'text'} field`;
 }
 
@@ -39,7 +53,14 @@ function controlValue(element: Editable): string {
   if (element instanceof HTMLSelectElement) {
     return [...element.selectedOptions].map((option) => option.text).join(', ');
   }
-  return element.value;
+  if (element instanceof HTMLInputElement && element.type === 'checkbox') {
+    return element.checked ? 'Checked' : 'Not checked';
+  }
+  if (element instanceof HTMLInputElement && element.type === 'radio') {
+    return element.checked ? 'Selected' : 'Not selected';
+  }
+  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) return element.value;
+  return element.innerText.trim();
 }
 
 function snapshotFields(): FieldSnapshot[] {
@@ -49,10 +70,10 @@ function snapshotFields(): FieldSnapshot[] {
       index,
       label: fieldLabel(element),
       value: controlValue(element),
-      controlType: element instanceof HTMLInputElement ? element.type : element.tagName.toLocaleLowerCase(),
-      required: element.required,
-      valid: element.validity.valid,
-      validationMessage: element.validationMessage
+      controlType: element instanceof HTMLInputElement ? element.type : isNativeEditable(element) ? element.tagName.toLowerCase() : 'contenteditable',
+      required: isNativeEditable(element) ? element.required : false,
+      valid: isNativeEditable(element) ? element.validity.valid : true,
+      validationMessage: isNativeEditable(element) ? element.validationMessage : ''
     }));
 }
 

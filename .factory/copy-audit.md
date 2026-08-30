@@ -73,7 +73,7 @@ Audited 30 August 2026. Counts use whitespace-separated words. The longest sente
 - 8 — Review important forms without sending your entries away.
 - 18 — Hero imagery was generated specifically for Form Guard with Azure AI Foundry and reviewed by the product team.
 - 8 — No stock art or personal data was used.
-- 5 — Built by Param Factory · v1.0.4.
+- 5 — Built by Param Factory · v1.0.5.
 
 ## Terminology
 

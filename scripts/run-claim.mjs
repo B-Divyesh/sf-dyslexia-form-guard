@@ -9,7 +9,8 @@ const unitClaims = new Map([
 const popupClaims = new Set([
   'offline-local-review', 'core-review-free', 'password-exclusion', 'privacy-local-only', 'read-aloud',
   'field-highlight', 'keyboard-review-navigation', 'never-edits-or-submits',
-  'native-validation-alerts', 'guard-plus-flagged-first'
+  'native-validation-alerts', 'guard-plus-flagged-first', 'editable-control-review',
+  'origin-scoped-permission'
 ]);
 const siteClaims = new Set(['sample-demo-review', 'sample-demo-reset']);
 
@@ -19,7 +20,10 @@ if (unitClaims.has(claim)) {
   const [file, tag] = unitClaims.get(claim);
   execFileSync('npm', ['test', '--', file, '-t', tag], { stdio: 'inherit' });
 } else if (popupClaims.has(claim)) {
-  execFileSync('npm', ['run', 'test:popup-a11y'], { stdio: 'inherit' });
+  execFileSync('npm', ['run', 'test:popup-a11y'], {
+    stdio: 'inherit',
+    env: { ...process.env, FORM_GUARD_CLAIM: claim }
+  });
 } else if (siteClaims.has(claim)) {
   execFileSync('npm', ['run', 'test:a11y'], { stdio: 'inherit' });
 } else if (claim === 'installable-mv3') {

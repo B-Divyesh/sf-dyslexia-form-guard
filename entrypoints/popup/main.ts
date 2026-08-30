@@ -7,6 +7,7 @@ import './style.css';
 const PRODUCT = 'dyslexia-form-guard';
 const BILLING_API = 'https://api.sociobot.in/api/v1';
 const DAY = 86_400_000;
+const ALLOWED_SITES_VERSION = 2;
 
 type ViewName = 'ready' | 'loading' | 'blocked' | 'empty' | 'error' | 'review';
 type LicenseCache = { valid: boolean; checkedAt: number };
@@ -59,22 +60,26 @@ async function activeTab(): Promise<{ id: number; url: string }> {
 }
 
 async function allowed(site: string): Promise<boolean> {
-  const stored = await browser.storage.local.get('allowedSites');
-  return Array.isArray(stored.allowedSites) && stored.allowedSites.includes(site);
+  const stored = await browser.storage.local.get(['allowedSites', 'allowedSitesVersion']);
+  return stored.allowedSitesVersion === ALLOWED_SITES_VERSION
+    && Array.isArray(stored.allowedSites)
+    && stored.allowedSites.includes(site);
 }
 
 async function allowCurrentSite(): Promise<void> {
   if (!blockedSite) return;
-  const stored = await browser.storage.local.get('allowedSites');
-  const sites = Array.isArray(stored.allowedSites) ? stored.allowedSites.filter((item): item is string => typeof item === 'string') : [];
+  const stored = await browser.storage.local.get(['allowedSites', 'allowedSitesVersion']);
+  const sites = stored.allowedSitesVersion === ALLOWED_SITES_VERSION && Array.isArray(stored.allowedSites)
+    ? stored.allowedSites.filter((item): item is string => typeof item === 'string')
+    : [];
   if (!sites.includes(blockedSite)) sites.push(blockedSite);
-  await browser.storage.local.set({ allowedSites: sites });
+  await browser.storage.local.set({ allowedSites: sites, allowedSitesVersion: ALLOWED_SITES_VERSION });
   await runScan(true);
 }
 
 function block(reason: string, site: string): void {
   blockedSite = site;
-  elements.blockedDetail.textContent = `Form Guard is paused because this looks like a ${reason}. Review can run only after you enable this site.`;
+  elements.blockedDetail.textContent = `Form Guard is paused because this looks like a ${reason}. Review can run only after you enable this exact site address.`;
   showView('blocked');
   elements.enableSiteButton.focus();
 }

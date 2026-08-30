@@ -1,13 +1,13 @@
 # Form Guard
 
-Form Guard is a local-first Chrome/Edge extension for people who want a calmer final check before submitting an important web form. It reads visible editable fields only after the user starts a review, then presents one field at a time and conservatively flags:
+Form Guard is a local-first Chrome and Edge extension for a calmer final check before submitting an important web form. It reads visible text fields, choice controls, selects, and editing areas only after you start a review. It names checked and selected states. It presents one field at a time and conservatively flags:
 
 - repeated adjacent words;
 - likely adjacent-letter transpositions against a small built-in vocabulary;
 - mismatched confirmation/retyped values;
 - field/value problems already reported by the browser’s native validation.
 
-It can read the current field aloud, highlights that field on the page, and supports left/right arrow navigation. It never edits or submits a form. Password values are always excluded. Password pages, government domains, and known banking and health providers pause by default until the user explicitly enables that origin.
+It can read the current field aloud, highlights that field on the page, and supports left/right arrow navigation. It never edits or submits a form. Password values are always excluded. Password pages, government domains, and known banking and health providers pause by default until the user explicitly enables that origin. Each approval applies only to that exact origin, including a non-default port.
 
 Live site: <https://dyslexia-form-guard.sociobot.in>
 
