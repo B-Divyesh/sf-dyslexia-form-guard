@@ -14,7 +14,8 @@ export default defineConfig({
         home: resolve(process.cwd(), 'site/index.html'),
         privacy: resolve(process.cwd(), 'site/privacy/index.html'),
         terms: resolve(process.cwd(), 'site/terms/index.html'),
-        lab: resolve(process.cwd(), 'site/lab/index.html')
+        lab: resolve(process.cwd(), 'site/lab/index.html'),
+        notFound: resolve(process.cwd(), 'site/404.html')
       }
     }
   }

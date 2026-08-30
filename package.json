@@ -1,6 +1,6 @@
 {
   "name": "dyslexia-form-guard",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,8 +10,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
-    "test:a11y": "node scripts/a11y-check.mjs",
-    "test:popup-a11y": "xvfb-run -a node scripts/popup-a11y-check.mjs",
+    "test:a11y": "node scripts/run-site-check.mjs",
+    "test:popup-a11y": "node scripts/run-popup-check.mjs",
+    "claim": "node scripts/run-claim.mjs",
     "test:billing-live": "node scripts/billing-live-check.mjs",
     "test:watch": "vitest",
     "build:extension": "wxt build",

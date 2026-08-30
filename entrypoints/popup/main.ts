@@ -181,6 +181,7 @@ function speakCurrentField(): void {
   if (!field) return;
   const relevant = fieldFindings(field);
   const text = `${field.label}. ${field.value || 'Blank'}. ${relevant.map((finding) => `${finding.title}. ${finding.detail}`).join(' ')}`;
+  elements.speakButton.dataset.lastRead = text;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 0.88;
   utterance.onstart = () => {

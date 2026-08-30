@@ -19,6 +19,7 @@ describe('adjacentTranspositionCandidate', () => {
   it('finds conservative adjacent swaps', () => {
     expect(adjacentTranspositionCandidate('emial')).toBe('email');
     expect(adjacentTranspositionCandidate('adn')).toBe('and');
+    expect(adjacentTranspositionCandidate('from')).toBeNull();
     expect(adjacentTranspositionCandidate('street')).toBeNull();
     expect(adjacentTranspositionCandidate('Divyesh')).toBeNull();
   });
@@ -35,6 +36,15 @@ describe('analyseFields', () => {
     ]);
 
     expect(findings.map((finding) => finding.kind)).toEqual(['repeat', 'transposition', 'mismatch']);
+  });
+
+  it('@claim:false-alert-limit keeps ordinary uses of from quiet across a representative form', () => {
+    const findings = analyseFields([
+      field(0, 'Move details', 'I moved from Boston last year.'),
+      field(1, 'Work arrangement', 'I work from home three days a week.')
+    ]);
+
+    expect(findings).toEqual([]);
   });
 
   it('flags a repeated word and a transposition', () => {

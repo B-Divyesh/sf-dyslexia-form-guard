@@ -62,3 +62,5 @@ UI transitions last 160–220ms and animate only opacity or transform. The hero 
 - License/provenance: generated specifically for Form Guard on 2026-08-27; original project asset. Source PNG and prompt sidecar are retained in `assets/src/`; optimised WebP is shipped.
 
 Hand-authored interface icons and the product mark are inline SVG/pixel geometry created for this repository under the project MIT license. No stock art, icon library, third-party runtime assets, or external fonts are used.
+
+`public/assets/form-guard-social.png` is a 1200 × 630 crop derived from the reviewed generated hero above for route social cards. `public/apple-touch-icon.png` is a 180 × 180 export of the hand-authored product mark. Both are project-owned derivatives and introduce no third-party asset or network dependency.

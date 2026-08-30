@@ -40,7 +40,7 @@ Audited 30 August 2026. Counts use whitespace-separated words. The longest sente
 - 10 — Field values are read only after you start a review.
 - 21 — They are held in memory for that popup session, never saved, and never sent to Form Guard or an AI service.
 - 5 — Password fields are always excluded.
-- 9 — Banking, health, government, and password pages pause by default.
+- 12 — Known banking and health providers, government, and password pages pause by default.
 - 11 — Site permissions and your optional license are the only stored settings.
 - 5 — Read the plain-language privacy policy.
 - 6 — Use every core check for free.
@@ -73,6 +73,7 @@ Audited 30 August 2026. Counts use whitespace-separated words. The longest sente
 - 8 — Review important forms without sending your entries away.
 - 18 — Hero imagery was generated specifically for Form Guard with Azure AI Foundry and reviewed by the product team.
 - 8 — No stock art or personal data was used.
+- 5 — Built by Param Factory · v1.0.4.
 
 ## Terminology
 

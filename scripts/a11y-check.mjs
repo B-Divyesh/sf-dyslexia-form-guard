@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.FORM_GUARD_TEST_URL || 'http://127.0.0.1:4173';
-const routes = ['/', '/privacy/', '/terms/', '/lab/'];
+const routes = ['/', '/privacy/', '/terms/', '/lab/', '/404.html'];
 const browser = await chromium.launch();
 let failed = false;
 
@@ -13,8 +13,11 @@ const viewports = [
 
 for (const viewport of viewports) {
   const context = await browser.newContext({ viewport });
-  const page = await context.newPage();
   for (const route of routes) {
+    const page = await context.newPage();
+    const consoleErrors = [];
+    page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+    page.on('pageerror', (error) => consoleErrors.push(error.message));
     await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
     const results = await new AxeBuilder({ page }).analyze();
     const blockers = results.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact ?? ''));
@@ -24,6 +27,26 @@ for (const viewport of viewports) {
       for (const node of violation.nodes) console.error(`    ${node.target.join(' ')}`);
     }
     failed ||= blockers.length > 0;
+
+    const structure = await page.evaluate(() => ({
+      title: document.title,
+      h1Count: document.querySelectorAll('h1').length,
+      mainCount: document.querySelectorAll('main').length,
+      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href'),
+      ogImage: document.querySelector('meta[property="og:image"]')?.getAttribute('content'),
+      twitterCard: document.querySelector('meta[name="twitter:card"]')?.getAttribute('content'),
+      appleTouch: document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href'),
+      headerLinks: [...document.querySelectorAll('.site-header nav a')].map((link) => link.textContent?.trim()),
+      hasFactoryCredit: document.body.textContent?.includes('Built by Param Factory')
+    }));
+    if (!structure.title || structure.h1Count !== 1 || structure.mainCount !== 1 || !structure.canonical || !structure.ogImage || structure.twitterCard !== 'summary_large_image' || !structure.appleTouch || !structure.hasFactoryCredit) {
+      console.error(`  ${viewport.name} ${route}: title, landmarks, social metadata, or factory footer identity is incomplete`);
+      failed = true;
+    }
+    if (structure.headerLinks.join('|') !== 'Demo|How it works|Privacy|Terms') {
+      console.error(`  ${viewport.name} ${route}: header navigation is not the shared site shell`);
+      failed = true;
+    }
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
     if (overflow) {
@@ -38,6 +61,15 @@ for (const viewport of viewports) {
     }
 
     if (route === '/lab/') {
+      // @claim:sample-demo-review
+      const immediateReview = await page.locator('#demo-finding-counter').textContent() === '3 CHECKS'
+        && await page.locator('#demo-field-label').textContent() === 'Delivery notes'
+        && await page.locator('#demo-findings .finding').count() === 2;
+      if (!immediateReview) {
+        console.error(`  ${viewport.name} ${route}: sample demo did not show an immediate local review result`);
+        failed = true;
+      }
+
       // @claim:sample-demo-reset
       await page.locator('#practice-name').fill('Changed sample value');
       await page.getByRole('button', { name: 'Reset demo' }).click();
@@ -45,6 +77,12 @@ for (const viewport of viewports) {
       const submitDisabled = await page.getByRole('button', { name: 'Practice submit (disabled)' }).isDisabled();
       if (!sampleReset || !submitDisabled) {
         console.error(`  ${viewport.name} ${route}: sample reset or disabled submit failed`);
+        failed = true;
+      }
+
+      const demoStorage = await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) }));
+      if (demoStorage.local.length || demoStorage.session.length) {
+        console.error(`  ${viewport.name} ${route}: sample demo wrote browser storage`);
         failed = true;
       }
     }
@@ -61,6 +99,12 @@ for (const viewport of viewports) {
         }
       }
     }
+
+    if (consoleErrors.length) {
+      console.error(`  ${viewport.name} ${route}: console errors: ${consoleErrors.join(' | ')}`);
+      failed = true;
+    }
+    await page.close();
   }
   await context.close();
 }

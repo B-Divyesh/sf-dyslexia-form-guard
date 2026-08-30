@@ -9,6 +9,12 @@ const CHECK_WORDS = new Set([
   'telephone', 'the', 'their', 'there', 'verify', 'work', 'year', 'and', 'form'
 ]);
 
+// A target word can be a valid, much more common word when its letters are
+// swapped (for example, "from" → "form").  Form Guard deliberately skips
+// those ambiguous cases: its job is a calm final pass, not a spell checker.
+// Keep this list small and evidence-led so the expected sample remains useful.
+const AMBIGUOUS_SOURCE_WORDS = new Set(['from', 'three']);
+
 const NORMALISE_PAIR_WORDS = /\b(confirm|confirmation|retype|retyped|re-enter|reenter|repeat|again|verify|verification)\b/giu;
 // JavaScript's \b only recognises ASCII "word" characters. Use explicit
 // Unicode letter boundaries so names and addresses containing accented letters
@@ -17,7 +23,7 @@ const REPEATED_WORD = /(?<![\p{L}\p{M}])([\p{L}][\p{L}\p{M}'’-]*)\s+\1(?![\p{L
 
 export function adjacentTranspositionCandidate(word: string): string | null {
   const lower = word.toLocaleLowerCase();
-  if (lower.length < 3 || CHECK_WORDS.has(lower)) return null;
+  if (lower.length < 3 || CHECK_WORDS.has(lower) || AMBIGUOUS_SOURCE_WORDS.has(lower)) return null;
 
   const matches = new Set<string>();
   for (let index = 0; index < lower.length - 1; index += 1) {

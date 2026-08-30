@@ -1,6 +1,7 @@
 const BANKING_SUFFIXES = [
   'americanexpress.com', 'bankofamerica.com', 'capitalone.com', 'chase.com', 'citibank.com',
-  'discover.com', 'pnc.com', 'td.com', 'truist.com', 'usbank.com', 'wellsfargo.com'
+  'discover.com', 'hsbc.com', 'barclays.co.uk', 'lloydsbank.com', 'natwest.com', 'pnc.com',
+  'santander.com', 'td.com', 'truist.com', 'usbank.com', 'wellsfargo.com'
 ];
 
 const HEALTH_SUFFIXES = [
@@ -8,8 +9,9 @@ const HEALTH_SUFFIXES = [
   // intentionally conservative: a pause asks for per-origin consent; it never
   // prevents someone from using the local review after that explicit choice.
   'aetna.com', 'anthem.com', 'bcbs.com', 'cigna.com', 'cvshome.com',
-  'kaiserpermanente.org', 'mychart.com', 'mychart.org', 'optum.com',
-  'unitedhealthcare.com', 'walgreens.com'
+  'clevelandclinic.org', 'kaiserpermanente.org', 'mayoclinic.org', 'mychart.com',
+  'mychart.org', 'optum.com', 'stanfordhealthcare.org', 'unitedhealthcare.com',
+  'walgreens.com'
 ];
 
 const BANKING_LABELS = new Set(['bank', 'banking', 'creditunion', 'mortgage', 'mybank']);

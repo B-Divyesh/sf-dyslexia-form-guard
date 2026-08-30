@@ -4,32 +4,69 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#090c14" />
-    <meta name="description" content="A safe practice form for testing Form Guard." />
+    <meta name="description" content="Review a safe sample form with Form Guard's local checks before installing the extension." />
+    <link rel="canonical" href="https://dyslexia-form-guard.sociobot.in/lab/" />
     <link rel="icon" href="/favicon.png" type="image/png" />
-    <title>Practice form — Form Guard</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Demo — Form Guard" />
+    <meta property="og:description" content="Review a safe sample form with local checks before installing the extension." />
+    <meta property="og:url" content="https://dyslexia-form-guard.sociobot.in/lab/" />
+    <meta property="og:image" content="https://dyslexia-form-guard.sociobot.in/assets/form-guard-social.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Demo — Form Guard" />
+    <meta name="twitter:description" content="Review a safe sample form with local checks before installing the extension." />
+    <meta name="twitter:image" content="https://dyslexia-form-guard.sociobot.in/assets/form-guard-social.png" />
+    <title>Demo — Form Guard</title>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
-    <header class="site-header"><a class="logo" href="/" aria-label="Form Guard home"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>FORM GUARD</span></a><a class="header-download" href="/">Back home</a></header>
+    <header class="site-header">
+      <a class="logo" href="/" aria-label="Form Guard home"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>FORM GUARD</span></a>
+      <nav aria-label="Main navigation"><a href="/lab/" aria-current="page">Demo</a><a href="/#how">How it works</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+      <a class="header-download" href="/downloads/form-guard-chrome.zip" download>Get extension <span aria-hidden="true">↓</span></a>
+    </header>
     <aside class="demo-banner" aria-label="Sample data notice">
       <strong>Demo — sample data, nothing is saved</strong>
       <span><button type="reset" form="sample-form">Reset demo</button><a href="/downloads/form-guard-chrome.zip" download>Start for real</a></span>
     </aside>
     <main id="main" class="wrap lab-page">
-      <p class="console-label">TRAINING ROUTE / SAFE TO TEST</p>
-      <h1>Try the review flow.</h1>
-      <p class="lab-intro">This practice form contains three intentional issues. Install Form Guard, open it on this page, and see whether you catch each one. Nothing is submitted.</p>
-      <p class="lab-note"><strong>Expected:</strong> one repeated word, one adjacent letter swap, and one retyped-value mismatch. Clean fields should stay quiet.</p>
-      <form id="sample-form" class="practice-form" action="">
-        <label for="practice-name">Full name<input id="practice-name" name="full-name" value="Sam Rivera" /></label>
-        <label for="practice-address">Street address<input id="practice-address" name="street-address" value="12 Cedar Street" /></label>
-        <label for="practice-email">Email<input id="practice-email" name="email" type="email" value="sam@example.com" /></label>
-        <label for="practice-confirm">Confirm email<input id="practice-confirm" name="confirm-email" type="email" value="sma@example.com" /></label>
-        <label for="practice-notes">Delivery notes<textarea id="practice-notes" name="notes">Send the the receipt to my emial address.</textarea></label>
-        <button class="button button-secondary" type="button" disabled>Practice submit (disabled)</button>
-      </form>
+      <p class="console-label">DEMO / LOCAL REVIEW ACTIVE</p>
+      <h1>Review the sample form.</h1>
+      <p class="lab-intro">This is the real local review flow on safe sample data. It finds three intentional checks without installing or saving anything.</p>
+      <div class="demo-workspace">
+        <section class="demo-review" aria-labelledby="demo-field-label">
+          <div class="demo-review-status"><span id="demo-field-counter">FIELD 05 / 05</span><span id="demo-finding-counter">3 CHECKS</span></div>
+          <div class="demo-current-field">
+            <p class="console-label">CURRENT FIELD</p>
+            <h2 id="demo-field-label" tabindex="-1">Delivery notes</h2>
+            <p id="demo-field-value" class="typed-value">Send the the receipt to my emial address.</p>
+          </div>
+          <div id="demo-findings" class="demo-findings" aria-live="polite"></div>
+          <div class="demo-controls" aria-label="Sample review controls">
+            <button id="demo-previous" class="button button-secondary" type="button">← Previous</button>
+            <button id="demo-read" class="button button-secondary" type="button">Read field</button>
+            <button id="demo-next" class="button button-secondary" type="button">Next →</button>
+          </div>
+          <p id="demo-announcer" class="sr-only" aria-live="polite"></p>
+        </section>
+        <section aria-labelledby="sample-form-title">
+          <h2 id="sample-form-title" class="sample-form-title">Sample form fields</h2>
+          <p class="lab-note"><strong>Expected:</strong> one repeated word, one adjacent letter swap, and one retyped-value mismatch. Clean fields stay quiet.</p>
+          <form id="sample-form" class="practice-form" novalidate>
+            <label for="practice-name">Full name<input id="practice-name" name="full-name" value="Sam Rivera" /></label>
+            <label for="practice-address">Street address<input id="practice-address" name="street-address" value="12 Cedar Street" /></label>
+            <label for="practice-email">Email<input id="practice-email" name="email" type="email" value="sam@example.com" /></label>
+            <label for="practice-confirm">Confirm email<input id="practice-confirm" name="confirm-email" type="email" value="sma@example.com" /></label>
+            <label for="practice-notes">Delivery notes<textarea id="practice-notes" name="notes">Send the the receipt to my emial address.</textarea></label>
+            <button class="button button-secondary" type="button" disabled>Practice submit (disabled)</button>
+          </form>
+        </section>
+      </div>
     </main>
-    <footer class="site-footer"><div class="wrap footer-grid"><div><a class="logo" href="/">FORM GUARD</a><p>Review important forms without sending your entries away.</p></div><nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div></footer>
+    <footer class="site-footer"><div class="wrap footer-grid"><div><a class="logo" href="/"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>FORM GUARD</span></a><p>Review important forms without sending your entries away.</p><p class="build-id">Built by Param Factory · v1.0.4</p></div><nav aria-label="Footer navigation"><a href="/lab/">Demo</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav><p class="disclosure">Sample values stay in this page. They are never saved or sent.</p></div></footer>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>

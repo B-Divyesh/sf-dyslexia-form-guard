@@ -29,6 +29,9 @@ try {
   lab.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   lab.on('pageerror', (error) => consoleErrors.push(error.message));
   await lab.goto(`${siteUrl}/lab/`, { waitUntil: 'networkidle' });
+  await lab.locator('#sample-form').evaluate((form) => {
+    form.addEventListener('submit', () => { form.dataset.formGuardSubmitted = 'true'; });
+  });
   const page = await context.newPage();
   page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('pageerror', (error) => consoleErrors.push(error.message));
@@ -39,14 +42,24 @@ try {
   await page.locator('#review-view:not([hidden])').waitFor();
   // @claim:offline-local-review
   assert.match(await page.locator('#network-status').textContent() ?? '', /OFFLINE \/ LOCAL/, 'Review must remain local and available after the page goes offline.');
-  // @claim:seeded-checks
   assert.match(await page.locator('#finding-counter').textContent() ?? '', /3 CHECKS/, 'The seeded lab form must reach extension review with its three expected checks.');
+  // @claim:core-review-free
+  assert.equal(await page.locator('#flagged-first').isDisabled(), true, 'The core scan must work before any Guard+ license is present.');
   const firstLabel = await page.locator('#field-label').textContent();
+  // @claim:keyboard-review-navigation
   await page.keyboard.press('ArrowRight');
   assert.notEqual(await page.locator('#field-label').textContent(), firstLabel, 'ArrowRight must advance the one-field review.');
+  // @claim:field-highlight
   assert.equal(await lab.locator('[data-form-guard-highlighted="true"]').count(), 1, 'The current field must be highlighted on the page.');
+  // @claim:read-aloud
+  await page.locator('#speak-button').click();
+  assert.match(await page.locator('#speak-button').getAttribute('data-last-read') ?? '', /Street address\. 12 Cedar Street\./, 'Read aloud must pass the current label and value to the browser speech API.');
+  await page.locator('#speak-button').click();
   await page.locator('#finish-button').click();
   assert.equal(await lab.locator('[data-form-guard-highlighted="true"]').count(), 0, 'Finishing must clear the page highlight.');
+  // @claim:never-edits-or-submits
+  assert.equal(await lab.locator('#practice-name').inputValue(), 'Sam Rivera', 'Review must not edit form values.');
+  assert.equal(await lab.locator('#sample-form').evaluate((form) => form.dataset.formGuardSubmitted ?? ''), '', 'Review must not submit the form.');
 
   await context.setOffline(false);
   await lab.locator('#sample-form').evaluate((form) => {
@@ -128,6 +141,7 @@ try {
   await lab.bringToFront();
   await page.locator('#empty-view .retry-button').click();
   await page.locator('#review-view:not([hidden])').waitFor();
+  // @claim:native-validation-alerts
   assert.match(await page.locator('#finding-counter').textContent() ?? '', /1 CHECK/, 'A blank native required field must produce a check after empty-state recovery.');
   await page.locator('#finish-button').click();
   await lab.locator('#recovery-reference').fill('A-104');
@@ -135,6 +149,37 @@ try {
   await page.locator('#scan-button').click();
   await page.locator('#review-view:not([hidden])').waitFor();
   assert.match(await page.locator('#finding-counter').textContent() ?? '', /NO ALERTS/, 'Repairing the required field must rescan cleanly.');
+  await page.locator('#finish-button').click();
+
+  await lab.locator('#sample-form').evaluate((form) => form.replaceChildren());
+  await lab.locator('#sample-form').evaluate((form) => {
+    const addField = (labelText, fieldValue, type = 'text') => {
+      const label = document.createElement('label');
+      label.textContent = labelText;
+      const input = document.createElement('input');
+      input.type = type;
+      input.value = fieldValue;
+      input.id = `plus-${labelText.toLowerCase().replace(/\s+/g, '-')}`;
+      label.htmlFor = input.id;
+      label.append(input);
+      form.append(label);
+    };
+    addField('Full name', 'Sam Rivera');
+    addField('Email', 'sam@example.com', 'email');
+    addField('Confirm email', 'sma@example.com', 'email');
+    addField('Delivery notes', 'Send the the receipt to my emial address.');
+  });
+  await worker.evaluate(() => chrome.storage.local.set({ licenseCache: { valid: true, checkedAt: Date.now() }, flaggedFirst: true }));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.locator('#plus-details').evaluate((details) => { details.open = true; });
+  await page.locator('#flagged-first').waitFor({ state: 'visible' });
+  // @claim:guard-plus-flagged-first
+  assert.equal(await page.locator('#flagged-first').isEnabled(), true, 'A valid Guard+ cache must enable flagged-first ordering.');
+  await lab.bringToFront();
+  await page.locator('#scan-button').click();
+  await page.locator('#review-view:not([hidden])').waitFor();
+  assert.ok(['Email', 'Confirm email', 'Delivery notes'].includes(await page.locator('#field-label').textContent() ?? ''), 'Flagged-first ordering must place a flagged field before clean fields.');
+  await page.locator('#finish-button').click();
   assert.deepEqual(outboundRequests, [], 'All packaged extension scenarios must remain local.');
   assert.deepEqual(consoleErrors, [], 'All packaged extension scenarios must remain console-error free.');
   console.log(`Packaged popup flow: offline, keyboard, password, privacy, empty recovery, native validation, and speaking state passed; ${results.violations.length} axe groups, ${blockers.length} serious/critical`);
