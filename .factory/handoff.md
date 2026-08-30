@@ -1,10 +1,12 @@
-# Form Guard repair handoff — READY TO DEPLOY
+# Form Guard repair handoff — DEPLOYED
 
 **Work order:** `dyslexia-form-guard-repair-5`  
 **Base verifier report:** `.factory/verification-5.md` (candidate `399210912204216113c3428ac0acb9a8c5f79ef2`)  
 **Repair commit:** `f16fa9c11226a5428cf74b2e5ce24da6c58d31b2`  
 **Artifact:** Chrome/Edge Manifest V3 extension `1.0.4` plus static landing site  
 **Production URL:** <https://dyslexia-form-guard.sociobot.in>
+
+**Deployment:** Azure Static Web Apps production deployment `8ec41f8a-b460-43f8-b818-d2da8be658e0` completed successfully on 30 August 2026. The deployed static artifact is the repair commit above.
 
 ## Result
 
@@ -39,6 +41,12 @@ Browser evidence:
 - `test:popup-a11y`: actual built extension in a fresh Chromium profile; offline local review, password exclusion, no form-text storage/outbound request, keyboard navigation, page highlight/clear, read-aloud request, native-validation recovery, free core review, and Guard+ flagged-first ordering all passed; **0 axe groups and 0 serious/critical**.
 - `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/`: HTTP 200, 575 ms local load, no console errors, `lang=en`, title, exactly one h1, main landmark, and complete image alt text.
 - Lighthouse 12.8.2 simulated mobile against the built local site: **100 performance / 100 accessibility / 100 best practices / 100 SEO**; FCP 1.1 s, LCP 1.4 s, TBT 0 ms, CLS 0. Evidence: `/tmp/tmp.RNJRIghRWG/lighthouse.json`.
+
+Post-deploy live evidence:
+
+- `/opt/fleet/lib/verify-url.sh` passed against the production URL: HTTP 200, 743 ms, no console errors, `lang=en`, title, one h1, main landmark, and complete image alt text.
+- Live desktop and 390 px site suite passed all five routes, including `/404.html`, with **0 axe groups and 0 serious/critical**. The actual built extension passed the live `/lab/` popup suite with the same offline, keyboard, privacy, native-validation, and Guard+ checks and **0 axe groups / 0 serious/critical**.
+- `GET /not-a-real-route-qa` is now **404 text/html**. `GET /downloads/form-guard-chrome.zip` is **200 application/zip**. The live ZIP SHA-256 is `cb638eeeafa0d17f390af4f0c92051e112becccd8ad94431e4d43c0e16c5cbde`, exactly matching the local build; its manifest is MV3 version `1.0.4`.
 
 ## How to run and deploy
 
