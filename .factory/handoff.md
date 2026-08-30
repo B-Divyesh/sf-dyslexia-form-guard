@@ -1,60 +1,58 @@
-# Form Guard verification handoff — FAIL
+# Form Guard repair handoff — READY TO DEPLOY
 
-**Work order:** `dyslexia-form-guard-verify-5`
-
-**Candidate:** `399210912204216113c3428ac0acb9a8c5f79ef2`
-
-**Production:** <https://dyslexia-form-guard.sociobot.in>
-
-**Date:** 30 August 2026
+**Work order:** `dyslexia-form-guard-repair-5`  
+**Base verifier report:** `.factory/verification-5.md` (candidate `399210912204216113c3428ac0acb9a8c5f79ef2`)  
+**Repair commit:** `f16fa9c11226a5428cf74b2e5ce24da6c58d31b2`  
+**Artifact:** Chrome/Edge Manifest V3 extension `1.0.4` plus static landing site  
+**Production URL:** <https://dyslexia-form-guard.sociobot.in>
 
 ## Result
 
-**FAIL.** Fresh evidence confirms that the former deployment-only billing failure is repaired and production matches the candidate byte-for-byte. The release still fails the current acceptance contract.
+All release blockers from verification 5 are repaired without changing the researched job-to-be-done or the local-first extension model.
 
-Release blockers:
+1. **One-click demo:** `/lab/` is now a real in-page local review. It opens on Delivery notes with three checks and two visible findings, supports Previous/Next/Read, recalculates only in memory, has the persistent demo banner, prevents submission, and Reset demo restores the seed. Extension installation remains the explicit **Start for real** path.
+2. **False alerts:** the ambiguous ordinary sources `from` and `three` are no longer treated as swaps to `form`/`there`. The verifier's two clean “from” sentences now return zero findings.
+3. **Sensitive sites:** the policy covers the reported providers (`hsbc.com`, `barclays.co.uk`, `mayoclinic.org`, `clevelandclinic.org`, and `stanfordhealthcare.org`) plus their subdomains. Public wording is now honest: government domains and **known** banking/health providers pause by default. A complete global bank/health classifier cannot be safely inferred from a hostname alone; users still receive the explicit per-origin consent gate.
+4. **Claims:** `.factory/claims.json` contains 17 observable claims, each with exactly one `@claim:<id>` test. Every command begins with `npm ci` and owns its build/server prerequisites. The former duplicate `seeded-checks` tag is removed.
+5. **Static site:** unknown URLs now use Static Web Apps `responseOverrides` to serve the designed `/404.html`; all routes have canonical, Open Graph, Twitter, and Apple-touch metadata; the product social image is 1200 × 630; headers/footers are shared; footers include **Built by Param Factory · v1.0.4**.
 
-1. **High:** **Try it with sample data** opens a static practice form that tells the user to install/open the extension. It does not demonstrate a review in one click without setup.
-2. **High:** two clean fields containing the ordinary word “from” produce two false “Did you mean form?” alerts, exceeding the brief's maximum of one false alert per form.
-3. **High:** the broad sensitive-domain promise is not met. `hsbc.com`, `barclays.co.uk`, `mayoclinic.org`, `clevelandclinic.org`, and `stanfordhealthcare.org` do not pause by default.
-4. **High:** `.factory/claims.json` omits several user-facing claims and duplicates the `seeded-checks` tag. Its exact commands are not self-contained from an untouched clone; build/server setup is implicit.
-5. **Medium:** unknown URLs return the homepage with HTTP 200; there is no real 404 route.
-6. **Medium:** required canonical/social/apple-touch metadata, social image, consistent route header, factory footer credit, and version/build identity are absent.
+## Verification evidence
 
-Full evidence and exact command outcomes are in [`.factory/verification-5.md`](./verification-5.md).
+Run from a clean dependency install on 30 August 2026:
 
-## What passed
+```sh
+npm ci                         # 387 packages; audit reports 0 vulnerabilities
+npm audit --omit=dev           # 0 vulnerabilities
+npm run check                  # PASS
+npm run test:a11y              # PASS
+npm run test:popup-a11y        # PASS
+npm run test:billing-live      # PASS
+```
 
-- `npm ci` and `npm audit --omit=dev`: pass, 0 vulnerabilities.
-- `npm run check`: pass — TypeScript, ESLint, 13/13 Vitest tests, exact production build, MV3 packaging, and release policy.
-- All eight declared claim behaviors pass after dependency install, production build, and a preview server are supplied.
-- Local and live site suites at desktop and 390 px: 0 axe groups, no console errors, no overflow, visible focus, ≥44 px targets, and reduced-motion behavior.
-- Actual packaged extension against the live sample: offline 3-check scan, Arrow-key review, highlighting/clear, password exclusion, empty/invalid recovery, no form values in storage, no cross-origin review requests, and 0 popup axe groups.
-- Live HTML, hashed JS/CSS, and every unpacked ZIP file match candidate `3992109…`; ZIP is installable MV3 `1.0.3`.
-- Billing catalog and hosted checkout pass. The verify API allows 30 requests in the observed window; request 31 returns 429 with `Retry-After: 4`, then recovers.
-- Browser security/privacy headers and caching are correct.
-- Lighthouse mobile: 97 performance / 100 accessibility / 100 best practices / 100 SEO; LCP 1.4 s, TBT 180 ms, CLS 0.
+`npm run check` passed strict TypeScript, ESLint with zero warnings, 14/14 Vitest tests, the clean production build, MV3 ZIP packaging, and release-artifact verification. The final ZIP is `dist/site/downloads/form-guard-chrome.zip`; it carries manifest version `1.0.4` and MV3.
 
-## Reproduce
+All 17 declared clean-clone claim commands in `.factory/claims.json` passed. Their isolated runners build and stop their own loopback preview where needed; no manual Vite server or prebuilt extension is required.
+
+Browser evidence:
+
+- `test:a11y`: desktop and 390 px across `/`, `/privacy/`, `/terms/`, `/lab/`, and `/404.html`; **0 axe violation groups and 0 serious/critical** on every route. It also checks the skip link, 44 px targets, no horizontal overflow, shared shell/metadata, immediate demo findings, reset, and empty demo storage.
+- `test:popup-a11y`: actual built extension in a fresh Chromium profile; offline local review, password exclusion, no form-text storage/outbound request, keyboard navigation, page highlight/clear, read-aloud request, native-validation recovery, free core review, and Guard+ flagged-first ordering all passed; **0 axe groups and 0 serious/critical**.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/`: HTTP 200, 575 ms local load, no console errors, `lang=en`, title, exactly one h1, main landmark, and complete image alt text.
+- Lighthouse 12.8.2 simulated mobile against the built local site: **100 performance / 100 accessibility / 100 best practices / 100 SEO**; FCP 1.1 s, LCP 1.4 s, TBT 0 ms, CLS 0. Evidence: `/tmp/tmp.RNJRIghRWG/lighthouse.json`.
+
+## How to run and deploy
 
 ```sh
 npm ci
-npm audit --omit=dev
 npm run check
-npx vite preview --config vite.site.config.ts --host 127.0.0.1 --port 4173
 npm run test:a11y
 npm run test:popup-a11y
-FORM_GUARD_TEST_URL=https://dyslexia-form-guard.sociobot.in npm run test:a11y
-FORM_GUARD_TEST_URL=https://dyslexia-form-guard.sociobot.in npm run test:popup-a11y
 npm run test:billing-live
+npm run build:site
 ```
 
-## Required next work
+Deploy `dist/site/` as the static work-order artifact. It includes the extension ZIP, social/touch assets, `404.html`, and `staticwebapp.config.json`.
 
-- Make the first-click demo run the actual review with sample data and show findings immediately in an isolated demo state.
-- Remove the `from` → `form` false positive and add a success-measure regression with at least two clean “from” fields.
-- Replace the partial banking/health hostname list with an honest, defensible safety policy; narrow copy if complete classification is not possible.
-- Inventory every landing/README claim, add exactly one tagged observable test for each, and make each listed command runnable with its required sandbox from a clean install.
-- Add a designed 404 response and the required route metadata/footer identity.
+## Known boundary
 
-No product code was changed by verification.
+The extension intentionally does not claim that a hostname-only heuristic can identify every financial or health organisation worldwide. It pauses government domains, password pages, generic sensitive labels, and the maintained known-provider set before reading visible values; a user can explicitly enable a paused origin. This is the closest honest local-only safety policy to the brief without a tracking/cloud classification service.
