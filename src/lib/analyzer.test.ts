@@ -25,6 +25,18 @@ describe('adjacentTranspositionCandidate', () => {
 });
 
 describe('analyseFields', () => {
+  it('@claim:seeded-checks finds the three documented issues in the sample form', () => {
+    const findings = analyseFields([
+      field(0, 'Full name', 'Sam Rivera'),
+      field(1, 'Street address', '12 Cedar Street'),
+      field(2, 'Email', 'sam@example.com'),
+      field(3, 'Confirm email', 'sma@example.com'),
+      field(4, 'Delivery notes', 'Send the the receipt to my emial address.')
+    ]);
+
+    expect(findings.map((finding) => finding.kind)).toEqual(['repeat', 'transposition', 'mismatch']);
+  });
+
   it('flags a repeated word and a transposition', () => {
     const findings = analyseFields([field(0, 'Street address', '12 the the emial road')]);
     expect(findings.map((finding) => finding.kind)).toEqual(['repeat', 'transposition']);

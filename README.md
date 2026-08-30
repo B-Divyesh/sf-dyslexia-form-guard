@@ -11,6 +11,8 @@ It can read the current field aloud, highlights that field on the page, and supp
 
 Live site: <https://dyslexia-form-guard.sociobot.in>
 
+One-click sample: <https://dyslexia-form-guard.sociobot.in/lab/>
+
 ## Privacy and positioning
 
 Analysis runs inside the browser. Form values remain in memory for the popup session and are never persisted, logged, or sent to a server. The extension stores only explicitly enabled site origins, a review-order preference, and optional Guard+ license state. Form Guard is a general-purpose utility, not a medical device, diagnostic aid, grammar checker, or guarantee that a form is correct.
@@ -29,7 +31,7 @@ No runtime CDN, analytics library, cloud spell checker, or paid third-party serv
 
 ## Develop
 
-Prerequisites: Node.js 20.12 or newer and npm.
+Prerequisites: Node.js 20.19 or newer and npm.
 
 ```sh
 npm ci
@@ -43,9 +45,12 @@ To load the development extension, open `chrome://extensions`, enable Developer 
 
 ```sh
 npm test             # unit tests for analysis and domain policy
-npm run check        # TypeScript, unit tests, and complete production build
+npm run typecheck    # strict TypeScript checks
+npm run lint         # ESLint across source, tests, and build scripts
+npm run check        # type, lint, unit tests, production build, and package policy
 npm run build        # clean full production build
 npm run build:site   # deployment build: site, MV3 extension, and download ZIP
+npm run test:billing-live # public catalog plus real hosted-checkout redirect
 ```
 
 The build creates:
@@ -69,7 +74,7 @@ loads, verifies the three seeded checks, and runs axe while the read-aloud
 control is in its hovered Stop state. It uses `xvfb-run` for Chromium's
 extension UI in headless Linux environments.
 
-The safe seeded practice form at `/lab/` contains exactly three expected alerts and is useful for a real extension smoke test.
+The safe seeded practice form at `/lab/` contains exactly three expected alerts. Reloading resets its sample fields, and the form never submits.
 
 ## Install a production build locally
 
@@ -81,7 +86,7 @@ The safe seeded practice form at `/lab/` contains exactly three expected alerts 
 
 ## Deployment
 
-Deploy the complete `dist/site/` directory made by `npm run build:site`, including `downloads/form-guard-chrome.zip` and `staticwebapp.config.json`. `build:site` deliberately packages the extension because it is the factory deployment command; this prevents a landing-site-only deploy from dropping the install artifact. The configuration prevents a missing download from being rewritten to the homepage and applies the cache and privacy headers. The factory owns DNS and deployment. The billing integration uses the slug-only endpoint `https://api.sociobot.in/api/v1/products/dyslexia-form-guard/...`; no provider credentials or product IDs are stored here. The factory must register the product before paid checkout is live.
+Deploy the complete `dist/site/` directory made by `npm run build:site`, including `downloads/form-guard-chrome.zip` and `staticwebapp.config.json`. `build:site` deliberately packages the extension because it is the factory deployment command; this prevents a landing-site-only deploy from dropping the install artifact. The configuration prevents a missing download from being rewritten to the homepage and applies the cache and privacy headers. The factory owns DNS and deployment. The billing integration uses the registered slug-only endpoint `https://api.sociobot.in/api/v1/products/dyslexia-form-guard/...`; no provider credentials or product IDs are stored here. Run `npm run test:billing-live` to verify the public `$12` product and hosted-checkout redirect.
 
 ## License
 

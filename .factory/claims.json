@@ -1,0 +1,51 @@
+[
+  {
+    "id": "seeded-checks",
+    "claim": "The sample form produces one repeated-word check, one adjacent-letter-swap check, and one retyped-value mismatch.",
+    "where": "landing page, practice form, README",
+    "test": "npx vitest run src/lib/analyzer.test.ts -t '@claim:seeded-checks'",
+    "sandbox": "The exact five fields shipped on /lab/ are analysed from a clean in-memory fixture; assert the three finding kinds in order."
+  },
+  {
+    "id": "sensitive-domain-pause",
+    "claim": "Banking, health, and government domains pause by default.",
+    "where": "landing page, README, popup",
+    "test": "npx vitest run src/lib/domain-policy.test.ts -t '@claim:sensitive-domain-pause'",
+    "sandbox": "Representative and known provider hosts are checked without browser storage or network access."
+  },
+  {
+    "id": "offline-local-review",
+    "claim": "Form review works offline after the sample page has loaded.",
+    "where": "landing page, README, popup",
+    "test": "npm run test:popup-a11y",
+    "sandbox": "A fresh Chromium profile loads the built MV3 extension and sample page, goes offline, and completes the seeded scan."
+  },
+  {
+    "id": "password-exclusion",
+    "claim": "Password values are never reviewed, even after the user enables a paused site.",
+    "where": "landing page, privacy page, README, popup",
+    "test": "npm run test:popup-a11y",
+    "sandbox": "A password containing a unique sentinel is added to the sample page; the site is enabled and every displayed review value is inspected."
+  },
+  {
+    "id": "privacy-local-only",
+    "claim": "Form values are not stored or sent to another origin during review.",
+    "where": "landing page, privacy page, README, popup",
+    "test": "npm run test:popup-a11y",
+    "sandbox": "A fresh Chromium profile records HTTP requests and all extension storage while reviewing sample and password sentinels."
+  },
+  {
+    "id": "installable-mv3",
+    "claim": "The download is an installable Chrome and Edge Manifest V3 extension archive.",
+    "where": "landing page, README",
+    "test": "npm run build && npm run test:release",
+    "sandbox": "A clean production build is unpacked; ZIP integrity, manifest version, extension version, and response policy are asserted."
+  },
+  {
+    "id": "guard-plus-checkout",
+    "claim": "Guard+ is a $12 one-time purchase through hosted Sociobot and Dodo checkout.",
+    "where": "landing page, popup, README",
+    "test": "npm run test:billing-live",
+    "sandbox": "Read the public product catalog and require a fresh HTTPS redirect to checkout.dodopayments.com without completing a purchase."
+  }
+]

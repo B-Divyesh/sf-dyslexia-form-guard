@@ -42,7 +42,7 @@ button, input { font: inherit; }
 .console-label { margin: 0 0 18px; color: var(--amber); font: 400 11px/1.5 'Departure', ui-monospace, monospace; letter-spacing: .08em; }
 .status-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; background: var(--lime); box-shadow: 0 0 0 3px rgba(184,243,74,.16); }
 h1, h2, h3 { margin: 0; line-height: 1.02; letter-spacing: -.035em; }
-h1 { max-width: 10.5ch; font-size: clamp(3.1rem, 6vw, 5.7rem); font-weight: 700; }
+h1 { max-width: 12ch; font-size: clamp(3.1rem, 6vw, 5.7rem); font-weight: 700; }
 h1 em { color: var(--amber); font-style: normal; }
 h2 { max-width: 18ch; font-size: clamp(2.25rem, 4vw, 4rem); }
 h3 { font-size: 1.45rem; }
@@ -141,6 +141,9 @@ kbd { padding: 2px 6px; border: 1px solid #60758f; border-bottom-width: 3px; bor
 .footer-grid nav { display: grid; gap: 8px; }
 .footer-grid nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
 .disclosure { margin: 0; }
+.demo-banner { position: sticky; z-index: 4; top: 0; display: flex; align-items: center; justify-content: center; gap: 24px; min-height: 52px; padding: 8px 24px; border-bottom: 1px solid #6e5614; color: #1b1608; background: var(--amber); }
+.demo-banner span { display: flex; gap: 16px; }
+.demo-banner button, .demo-banner a { min-height: 44px; display: inline-flex; align-items: center; border: 0; padding: 6px 10px; color: #1b1608; background: transparent; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 
 .legal-page main { min-height: calc(100vh - 250px); }
 .legal-content { max-width: 780px; padding-block: 80px 112px; }
@@ -199,6 +202,7 @@ kbd { padding: 2px 6px; border: 1px solid #60758f; border-bottom-width: 3px; bor
   .footer-grid { grid-template-columns: 1fr; gap: 24px; }
   .disclosure { grid-column: auto; }
   .practice-form { padding: 20px; }
+  .demo-banner { position: relative; align-items: flex-start; flex-direction: column; gap: 2px; padding-inline: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

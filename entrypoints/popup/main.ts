@@ -35,7 +35,6 @@ const elements = {
 };
 
 let activeTabId: number | undefined;
-let activeUrl = '';
 let blockedSite = '';
 let fields: FieldSnapshot[] = [];
 let findings: Finding[] = [];
@@ -86,7 +85,6 @@ async function runScan(skipPolicy = false): Promise<void> {
   try {
     const tab = await activeTab();
     activeTabId = tab.id;
-    activeUrl = tab.url;
     const site = siteKey(tab.url);
     const isAllowed = skipPolicy || await allowed(site);
     const domainReason = sensitiveDomainReason(new URL(tab.url).hostname);

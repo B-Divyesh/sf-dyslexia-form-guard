@@ -11,21 +11,25 @@
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
     <header class="site-header"><a class="logo" href="/" aria-label="Form Guard home"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>FORM GUARD</span></a><a class="header-download" href="/">Back home</a></header>
+    <aside class="demo-banner" aria-label="Sample data notice">
+      <strong>Demo — sample data, nothing is saved</strong>
+      <span><button type="reset" form="sample-form">Reset demo</button><a href="/downloads/form-guard-chrome.zip" download>Start for real</a></span>
+    </aside>
     <main id="main" class="wrap lab-page">
       <p class="console-label">TRAINING ROUTE / SAFE TO TEST</p>
       <h1>Try the review flow.</h1>
       <p class="lab-intro">This practice form contains three intentional issues. Install Form Guard, open it on this page, and see whether you catch each one. Nothing is submitted.</p>
       <p class="lab-note"><strong>Expected:</strong> one repeated word, one adjacent letter swap, and one retyped-value mismatch. Clean fields should stay quiet.</p>
-      <form class="practice-form" action="" onsubmit="return false">
+      <form id="sample-form" class="practice-form" action="">
         <label for="practice-name">Full name<input id="practice-name" name="full-name" value="Sam Rivera" /></label>
         <label for="practice-address">Street address<input id="practice-address" name="street-address" value="12 Cedar Street" /></label>
         <label for="practice-email">Email<input id="practice-email" name="email" type="email" value="sam@example.com" /></label>
         <label for="practice-confirm">Confirm email<input id="practice-confirm" name="confirm-email" type="email" value="sma@example.com" /></label>
         <label for="practice-notes">Delivery notes<textarea id="practice-notes" name="notes">Send the the receipt to my emial address.</textarea></label>
-        <button class="button button-secondary" type="button">Practice submit (disabled)</button>
+        <button class="button button-secondary" type="button" disabled>Practice submit (disabled)</button>
       </form>
     </main>
-    <footer class="site-footer"><div class="wrap footer-grid"><div><a class="logo" href="/">FORM GUARD</a><p>A private checkpoint for important forms.</p></div><nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div></footer>
+    <footer class="site-footer"><div class="wrap footer-grid"><div><a class="logo" href="/">FORM GUARD</a><p>Review important forms without sending your entries away.</p></div><nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav></div></footer>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>

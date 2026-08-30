@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { sensitiveDomainReason, siteKey } from './domain-policy';
 
 describe('sensitiveDomainReason', () => {
-  it('blocks government, banking and health hosts by default', () => {
+  it('@claim:sensitive-domain-pause blocks government, banking and health hosts by default', () => {
     expect(sensitiveDomainReason('forms.gov')).toBe('government domain');
     expect(sensitiveDomainReason('secure.mybank.example')).toBe('banking domain');
     expect(sensitiveDomainReason('patient.health.example')).toBe('health-related domain');

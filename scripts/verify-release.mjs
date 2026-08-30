@@ -7,6 +7,7 @@ const site = resolve('dist/site');
 const archive = resolve(site, 'downloads/form-guard-chrome.zip');
 const configPath = resolve(site, 'staticwebapp.config.json');
 
+// @claim:installable-mv3
 const zip = await readFile(archive);
 assert.ok(zip.length > 0, 'The extension download archive must not be empty.');
 assert.equal(zip.subarray(0, 2).toString('ascii'), 'PK', 'The extension download must be a ZIP archive.');
